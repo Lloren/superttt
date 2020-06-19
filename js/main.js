@@ -472,7 +472,7 @@ function check_user(){
 
 function make_call(url, add_data, callback, on_error){
 	console.log("make_call", url);
-	$.getJSON(base_url+url, $.extend({uuid: settings.get("uuid"), user_id: settings.get("user_id")}, add_data), function (data){manage_response(data, callback, on_error)}).fail(function (data){console.log("fail", data)});
+	$.getJSON(base_url+url, $.extend({uuid: settings.get("uuid"), user_id: settings.get("user_id")}, add_data), function (data){manage_response(data, callback, on_error)}).fail(function (data, textStatus, errorThrown){console.log("fail", data, textStatus, errorThrown)});
 }
 
 function manage_response(data, callback, on_error){
