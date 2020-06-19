@@ -525,7 +525,7 @@ function device_info(){
 
 function app_info(){
 	if (typeof AppVersion == "undefined"){
-		var AppVersion = {version:"0.0.0", build: "1"};
+		var AppVersion = {version: version, build: "1"};
 	}
 	return {name: app, version: AppVersion.version, build: AppVersion.build, phone_id: uuid, user_id: settings.get("user_id"), device: device_info()};
 }
@@ -554,7 +554,8 @@ function on_ready(){
 			navigator.splashscreen.show();
 			thePlatform = device.platform.toLowerCase();
 			
-			GA.startTrackerWithId(ga_code);
+			if (window.ga)
+				window.ga.startTrackerWithId(ga_code);
 			track("Load", "load");
 			
 			has_internet = navigator.connection.type != Connection.NONE;
@@ -597,12 +598,13 @@ function on_ready(){
 		
 		if (has_internet){
 			$.getJSON(base_url + "/app_version.json", function (data){
-				if (data.version == version){
+				var info = app_info();
+				if (data.version == info.version){
 					window.localStorage.removeItem("mitigation_js");
 					settings.set("mitigated_version", data.version);
 					start_splash_remove();
 				} else if (data.version != settings.get("mitigated_version")){
-					$.get(base_url + "/app_mitigation.js", {version: version}, function (js_code){
+					$.get(base_url + "/app_mitigation.js", {version: info.version}, function (js_code){
 						window.localStorage.setItem("mitigation_js", js_code);
 						settings.set("mitigated_version", data.version);
 						start_splash_remove();
@@ -658,8 +660,8 @@ function onLoad(){
 
 function onunload(){
 	track("Close", "close");
-	if (typeof GA != "undefined") {
-		GA.exit(false, false);
+	if (typeof window.ga != "undefined") {
+		window.ga.exit(false, false);
 	}
 	stats.add("active_time", Date.now() - active_start);
 	stats.save();
