@@ -455,7 +455,7 @@ function unload_online(){
 }
 
 function check_user(){
-	$.getJSON(base_url+"/ajax/settings.php", {action:"check", uuid: settings.get("uuid"), user_id: settings.get("user_id")}, function (data){
+	make_call("/ajax/settings.php", {action:"check"}, function (data){
 		console.log("check_user", data);
 		if (data.user_id){
 			settings.set("user_id", data.user_id);
@@ -470,7 +470,7 @@ function check_user(){
 }
 
 function make_call(url, add_data, callback, on_error){
-	$.getJSON(base_url+url, $.extend({uuid: settings.get("uuid"), user_id: settings.get("user_id")}, add_data), function (data){manage_response(data, callback, on_error)});
+	$.getJSON(base_url+url, $.extend({uuid: settings.get("uuid"), user_id: settings.get("user_id")}, add_data), function (data){manage_response(data, callback, on_error)}).fail(function (data){console.log("fail", data)});
 }
 
 function manage_response(data, callback, on_error){
@@ -504,7 +504,7 @@ function startup(){
 			console.log("check_user");
 			check_user();
 		}
-	}, 100);
+	}, 500);
 	
 	$(document).on("mouseup touchend", function (e){//"not touched" event
 		if (!main_grid_touched && $(".board.highlight").length && !e.target.matches(".board.highlight")){
@@ -692,7 +692,6 @@ function startup(){
 	click_event(".open_page", function (e){
 		$("#nav-overlay").trigger("click_event");
 		if ($(e.currentTarget).data("check")){
-			console.log("check", $(e.currentTarget).data("check"), window[$(e.currentTarget).data("check")]());
 			if (!window[$(e.currentTarget).data("check")]())
 				return;
 		}
