@@ -456,6 +456,7 @@ function unload_online(){
 
 function check_user(){
 	$.getJSON(base_url+"/ajax/settings.php", {action:"check", uuid: settings.get("uuid"), user_id: settings.get("user_id")}, function (data){
+		console.log("check_user", data);
 		if (data.user_id){
 			settings.set("user_id", data.user_id);
 			settings.set("username", data.name);
@@ -498,7 +499,9 @@ var t = false;
 
 function startup(){
 	setTimeout(function (){
+		console.log("has_internet", has_internet);
 		if (has_internet){
+			console.log("check_user");
 			check_user();
 		}
 	}, 100);
@@ -689,6 +692,7 @@ function startup(){
 	click_event(".open_page", function (e){
 		$("#nav-overlay").trigger("click_event");
 		if ($(e.currentTarget).data("check")){
+			console.log("check", $(e.currentTarget).data("check"), window[$(e.currentTarget).data("check")]());
 			if (!window[$(e.currentTarget).data("check")]())
 				return;
 		}
