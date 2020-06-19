@@ -637,7 +637,7 @@ function startup(){
 	});
 	
 	click_event("#find_opponent", function (e){
-		make_call("/ajax/queue_call.php", {action: "enter"}, function (data){
+		make_call(base_url+"/ajax/queue_call.php", {action: "enter"}, function (data){
 			if (data.game_id){
 				start_game("online", data.game_id);
 			} else {
@@ -698,59 +698,4 @@ function startup(){
 	}, true, true);
 
 	open_homepage();
-
-	//public:  BCFgIKEs9mI7PUhrMcvn30wBc93KnWsZL5dwDg1fpqZ4ThNPHCV0feE6axGSDRMdA5Mf1g3l8hy0BCGT7K8-2LE
-	//public:  new Uint8Array([4, 33, 96, 32, 161, 44, 246, 98, 59, 61, 72, 107, 49, 203, 231, 223, 76, 1, 115, 221, 202, 157, 107, 25, 47, 151, 112, 14, 13, 95, 166, 166, 120, 78, 19, 79, 28, 37, 116, 125, 225, 58, 107, 17, 146, 13, 19, 29, 3, 147, 31, 214, 13, 229, 242, 28, 180, 4, 33, 147, 236, 175, 62, 216, 177])
-	//private: 00DecBjF6WP6mmX0jy-SeTu2KhWU7PJ5kw2c7_oHrog
-
-	function urlB64ToUint8Array(base64String) {
-		const padding = '='.repeat((4 - base64String.length % 4) % 4);
-		const base64 = (base64String + padding)
-			.replace(/-/g, '+')
-			.replace(/_/g, '/');
-
-		const rawData = window.atob(base64);
-		const outputArray = new Uint8Array(rawData.length);
-
-		for (var i = 0; i < rawData.length; ++i) {
-			outputArray[i] = rawData.charCodeAt(i);
-		}
-		return outputArray;
-	}
-	
-	function ToBase64 (u8) {
-		return btoa(String.fromCharCode.apply(null, u8));
-	}
-	//console.log(urlB64ToUint8Array("BCFgIKEs9mI7PUhrMcvn30wBc93KnWsZL5dwDg1fpqZ4ThNPHCV0feE6axGSDRMdA5Mf1g3l8hy0BCGT7K8-2LE"));
-	console.log(urlB64ToUint8Array("BP8R_tPXbssGOzv9gj5rCBW_2xjYS8dYatZ_t98Nwcem32e4Tf759nrGselhDeRV0NShJe1cdz7e-aa1u_0iXrY"));
-	//new Uint8Array([4, 255, 17, 254, 211, 215, 110, 203, 6, 59, 59, 253, 130, 62, 107, 8, 21, 191, 219, 24, 216, 75, 199, 88, 106, 214, 127, 183, 223, 13, 193, 199, 166, 223, 103, 184, 77, 254, 249, 246, 122, 198, 177, 233, 97, 13, 228, 85, 208, 212, 161, 37, 237, 92, 119, 62, 222, 249, 166, 181, 187, 253, 34, 94, 182])
-
-	if ("serviceWorker" in navigator){
-		console.log("load worker");
-		navigator.serviceWorker.register('pwa_worker.js').then(function(registration) {
-			console.log('Registration successful, scope is:', registration);
-		}).catch(function(error) {
-			console.log('Service worker registration failed, error:', error);
-		});
-		navigator.serviceWorker.register("js/push_worker.js").then(function (serviceWorkerRegistration) {
-			serviceWorkerRegistration.pushManager.getSubscription().then(function(subscription) {
-				if (!subscription){
-					console.log("subscribe");
-					serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true, applicationServerKey:new Uint8Array([4, 255, 17, 254, 211, 215, 110, 203, 6, 59, 59, 253, 130, 62, 107, 8, 21, 191, 219, 24, 216, 75, 199, 88, 106, 214, 127, 183, 223, 13, 193, 199, 166, 223, 103, 184, 77, 254, 249, 246, 122, 198, 177, 233, 97, 13, 228, 85, 208, 212, 161, 37, 237, 92, 119, 62, 222, 249, 166, 181, 187, 253, 34, 94, 182])}).then(function (subscription){
-						console.log("new sub", subscription, JSON.stringify(subscription));//TODO: send to server
-					});
-				} else {
-					//subscription.unsubscribe();
-					t = subscription;
-					console.log("old sub", subscription);
-					console.log("old sub", JSON.stringify(subscription));//TODO: send to server
-				}
-			});
-		});
-	} else {
-		console.log("no service worker");
-	}
-
-
-
 }
