@@ -559,6 +559,7 @@ function on_ready(){
 			track("Load", "load");
 			
 			has_internet = navigator.connection.type != Connection.NONE;
+			console.log("internet", has_internet, navigator.connection.type, Connection);
 			
 			if(ads){
 				ad_manager = new admanager();

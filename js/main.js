@@ -497,9 +497,11 @@ function update_stats(){
 var t = false;
 
 function startup(){
-	if (has_internet){
-		check_user();
-	}
+	setTimeout(function (){
+		if (has_internet){
+			check_user();
+		}
+	}, 100);
 	
 	$(document).on("mouseup touchend", function (e){//"not touched" event
 		if (!main_grid_touched && $(".board.highlight").length && !e.target.matches(".board.highlight")){
