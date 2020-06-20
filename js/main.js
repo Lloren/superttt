@@ -455,8 +455,6 @@ function unload_online(){
 }
 
 function check_user(){
-	console.log("check_user");
-	$.get(base_url+"/ajax/settings.php", {uuid: settings.get("uuid"), user_id: settings.get("user_id"), action:"check"}, function (data){console.log("get_data", data)});
 	make_call("/ajax/settings.php", {action:"check"}, function (data){
 		console.log("check_user", data);
 		if (data.user_id){
@@ -472,12 +470,10 @@ function check_user(){
 }
 
 function make_call(url, add_data, callback, on_error){
-	console.log("make_call", url);
 	$.getJSON(base_url+url, $.extend({uuid: settings.get("uuid"), user_id: settings.get("user_id")}, add_data), function (data){manage_response(data, callback, on_error)}).fail(function (data, textStatus, errorThrown){console.log("fail", data, textStatus, errorThrown)});
 }
 
 function manage_response(data, callback, on_error){
-	console.log("manage_response", data);
 	if (data.mess.Error){
 		var mess = "";
 		for (var i=0;i<data.mess.Error.length;i++)
@@ -502,13 +498,9 @@ function update_stats(){
 var t = false;
 
 function startup(){
-	setTimeout(function (){
-		console.log("has_internet", has_internet);
-		if (has_internet){
-			console.log("check_user");
-			check_user();
-		}
-	}, 10000);
+	if (has_internet){
+		check_user();
+	}
 	
 	$(document).on("mouseup touchend", function (e){//"not touched" event
 		if (!main_grid_touched && $(".board.highlight").length && !e.target.matches(".board.highlight")){
