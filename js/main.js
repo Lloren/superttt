@@ -502,6 +502,9 @@ function startup(){
 	setTimeout(function (){
 		if (has_internet){
 			check_user();
+			setTimeout(function (){
+				check_user();
+			}, 500);
 		}
 	}, 10000);
 	
