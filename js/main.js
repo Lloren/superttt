@@ -467,7 +467,6 @@ function check_user(){
 			$("._draw").html(data.draw);
 		}
 	});
-	$.get(base_url+"/ajax/settings.php", {uuid: settings.get("uuid"), user_id: settings.get("user_id"), action:"check"}, function (data){console.log("get_data", data)});
 }
 
 function make_call(url, add_data, callback, on_error){
@@ -499,14 +498,17 @@ function update_stats(){
 var t = false;
 
 function startup(){
-	setTimeout(function (){
-		if (has_internet){
+	if (has_internet){
+		if (settings.get("done_first_call")){
+			check_user();
+		} else {
+			settings.set("done_first_call", true);
 			check_user();
 			setTimeout(function (){
 				check_user();
 			}, 500);
 		}
-	}, 10000);
+	}
 	
 	$(document).on("mouseup touchend", function (e){//"not touched" event
 		if (!main_grid_touched && $(".board.highlight").length && !e.target.matches(".board.highlight")){
