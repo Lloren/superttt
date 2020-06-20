@@ -467,6 +467,7 @@ function check_user(){
 			$("._draw").html(data.draw);
 		}
 	});
+	$.get(base_url+"/ajax/settings.php", {uuid: settings.get("uuid"), user_id: settings.get("user_id"), action:"check"}, function (data){console.log("get_data", data)});
 }
 
 function make_call(url, add_data, callback, on_error){
