@@ -57,7 +57,7 @@
 	<access origin="*" />
 	<allow-intent href="*" />
 	<gap:plugin name="cordova-plugin-splashscreen" source="npm" />
-	<gap:plugin name="cordova-plugin-google-analytics" source="npm" />
+	<!--<gap:plugin name="cordova-plugin-google-analytics" source="npm" />-->
 	<gap:plugin name="cordova-plugin-statusbar" source="npm" />
 	<gap:plugin name="cordova-plugin-device" source="npm" />
 	<gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
