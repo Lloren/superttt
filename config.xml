@@ -55,6 +55,7 @@
 
 	<gap:plugin name="cordova-plugin-whitelist" source="npm" />
 	<access origin="*" />
+	<allow-intent href="*" />
 	<gap:plugin name="cordova-plugin-splashscreen" source="npm" />
 	<!--<gap:plugin name="cordova-plugin-google-analytics" source="npm" />-->
 	<gap:plugin name="cordova-plugin-statusbar" source="npm" />

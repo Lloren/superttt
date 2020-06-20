@@ -603,33 +603,37 @@ function on_ready(){
 				if (data.version == info.version){
 					window.localStorage.removeItem("mitigation_js");
 					settings.set("mitigated_version", data.version);
-					start_splash_remove();
+					complete_ready();
 				} else if (data.version != settings.get("mitigated_version")){
 					$.get(base_url + "/app_mitigation.js", {version: info.version}, function (js_code){
 						window.localStorage.setItem("mitigation_js", js_code);
-						settings.set("mitigated_version", data.version);
-						start_splash_remove();
-					}).fail(function() {
-						start_splash_remove();
+						if (!dev)
+							settings.set("mitigated_version", data.version);
+					}).always(function() {
+						complete_ready();
 					});
 				} else {
-					start_splash_remove();
+					complete_ready();
 				}
 			});
 		} else {
-			start_splash_remove();
+			complete_ready()
 		}
-		var js = window.localStorage.getItem("mitigation_js");
-		if (js){
-			var script = document.createElement('script');
-			script.text = js;
-			document.body.appendChild(script);
-		}
-		
-		settings.set("uuid", uuid);
-		if (typeof startup === "function")
-			startup();
 	}, 1);
+}
+
+function complete_ready(){
+	start_splash_remove();
+	var js = window.localStorage.getItem("mitigation_js");
+	if (js){
+		var script = document.createElement('script');
+		script.text = js;
+		document.body.appendChild(script);
+	}
+	
+	settings.set("uuid", uuid);
+	if (typeof startup === "function")
+		startup();
 }
 
 function online_check(){
