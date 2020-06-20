@@ -456,6 +456,7 @@ function unload_online(){
 
 function check_user(){
 	console.log("check_user");
+	$.get(base_url+"/ajax/settings.php", {uuid: settings.get("uuid"), user_id: settings.get("user_id"), action:"check"}, function (data){console.log("get_data", data)});
 	make_call("/ajax/settings.php", {action:"check"}, function (data){
 		console.log("check_user", data);
 		if (data.user_id){
