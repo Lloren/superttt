@@ -244,6 +244,7 @@ function open_modal(options){
 		$("#mbutton2").hide();
 	}
 	$("#modal a").off().on("touchend", function (e){
+		e.stopPropagation();
 		if (!$(this).hasClass("no_close")){
 			$("#modal").hide();
 			$("#modal-overlay").removeClass("enabled");

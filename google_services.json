@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "698487053171",
+    "firebase_url": "https://devtest-42edd.firebaseio.com",
+    "project_id": "devtest-42edd",
+    "storage_bucket": "devtest-42edd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698487053171:android:c6b4c746a37358da55c306",
+        "android_client_info": {
+          "package_name": "com.twodio.superttt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "698487053171-a2kc18k12mdh6p49hnm49to2qqs27sqo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9QZecYpwlJcOj1NtP_suK6c5G-Z4FXDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "698487053171-a2kc18k12mdh6p49hnm49to2qqs27sqo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
