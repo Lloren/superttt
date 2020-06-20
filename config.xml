@@ -65,6 +65,10 @@
 	<gap:plugin name="cordova-plugin-appversion" source="npm" />
 	<gap:plugin name="phonegap-plugin-push" source="npm" />
 
+	<platform name="android">
+		<resource-file src="google-services.json" target="app/google-services.json" />
+	</platform>
+
 	<feature name="http://api.phonegap.com/1.0/network" />
 
 	<feature name="StatusBar">
