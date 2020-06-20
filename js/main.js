@@ -507,7 +507,7 @@ function startup(){
 			console.log("check_user");
 			check_user();
 		}
-	}, 500);
+	}, 10000);
 	
 	$(document).on("mouseup touchend", function (e){//"not touched" event
 		if (!main_grid_touched && $(".board.highlight").length && !e.target.matches(".board.highlight")){
