@@ -5,7 +5,7 @@
 		version			= "1.0.1">
 	<name>Super TicTakToe</name>
 	<description>
-		Super TicTakToe
+		Super Tic Tac Toe Game
 	</description>
 	<author email="support@2dio.com" href="http://2dio.com">
 		2Dio, Inc.
@@ -66,6 +66,15 @@
 	<gap:plugin name="phonegap-plugin-push" source="npm">
 		<variable name="FCM_VERSION" value="11.0.1" />
 	</gap:plugin>
+	<gap:plugin name="cordova-plugin-admobpro-firebase" source="npm">
+		<variable name="PLAY_SERVICES_VERSION" value="11.0.1" />
+	</gap:plugin>
+	<platform name="android">
+		<gap:plugin name="cordova-plugin-ad-chartboost" source="npm"/>
+	</platform>
+	<platform name="ios">
+		<plugin spec="https://github.com/floatinghotpot/cordova-plugin-chartboost.git" source="git" />
+	</platform>
 
 	<platform name="android">
 		<resource-file src="google-services.json" target="app/google-services.json" />

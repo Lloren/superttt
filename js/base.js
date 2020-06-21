@@ -294,12 +294,12 @@ function close_modala(){
 }
 
 function track(catigory, action, label, value){
-	if (typeof GA != "undefined"){
+	if (typeof window.ga != "undefined"){
 		catigory = catigory || "Hit";
 		action = action || catigory;
 		label = label || action;
 		value = value || 1;
-		GA.trackEvent(catigory, action, label, value);
+		window.ga.trackEvent(catigory, action, label, value);
 	}
 }
 

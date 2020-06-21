@@ -68,6 +68,8 @@ var ping_timeout = false;
 
 var start_message = false;
 
+var audio = false;
+
 var player_char = "x";
 var other_player_char = "o";
 var player_num = 1;
@@ -509,6 +511,64 @@ function startup(){
 			}, 500);
 		}
 	}
+	
+	audio = new audio();
+	audio.load_sound("audio/music/bensound-acousticbreeze.mp3", "music1");
+	audio.load_sound("audio/music/bensound-cute.mp3", "music2");
+	audio.load_sound("audio/music/bensound-sunny.mp3", "music3");
+	audio.load_sound("audio/music/bensound-tenderness.mp3", "music4");
+	audio.load_sound("audio/music/bensound-ukulele.mp3", "music5");
+	
+	
+	
+	
+	var push = PushNotification.init({
+		"android": {
+			"senderID": "XXXXXXXX"
+		},
+		"ios": {
+			"sound": true,
+			"vibration": true,
+			"badge": true,
+			"clearBadge": true
+		}
+	});
+	
+	PushNotification.hasPermission(data => {
+		console.log("hasPermission", data);
+		if (data.isEnabled) {
+		}
+	});
+	
+	push.on("registration", (data) => {
+		console.log("registration", data);
+		if (has_internet){
+			data.registrationId;
+		}
+	});
+	
+	push.on("notification", (data) => {
+		console.log("notification", data);
+		// data.message,
+		// data.title,
+		// data.count,
+		// data.sound,
+		// data.image,
+		// data.additionalData
+	});
+	
+	push.on("error", (e) => {
+		console.log("error", e);
+		// e.message
+	});
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	$(document).on("mouseup touchend", function (e){//"not touched" event
 		if (!main_grid_touched && $(".board.highlight").length && !e.target.matches(".board.highlight")){

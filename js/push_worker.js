@@ -1,5 +1,5 @@
 'use strict';
-console.log("worker load");
+console.log("push worker load");
 var new_window_promise = false;
 
 self.addEventListener('push', function(event) {
