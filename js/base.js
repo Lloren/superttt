@@ -315,85 +315,166 @@ function start_splash_remove(){
 
 
 
-function iads(){
+function chartboost_ads(){
 	var scope = this;
-	this.available = (thePlatform == "ios" && window.plugins.iAd);
+	this.available = (typeof Chartboost != "undefined" || typeof window.chartboost != "undefined");
 	this.loaded = false;
 	this.failed_at = 0;
 	this.active = false;
 	this.priority = 1;
+	this.id = "";
+	this.key = "";
 	
 	this.init = function(){
 		if (!this.loaded){
 			this.loaded = true;
-			window.plugins.iAd.createBannerView({
-				"bannerAtTop": false,
-				"overlap": false,
-				"offsetTopBar": false
-			}, function(){
-				scope.dshow();
-			}, function(){
-				scope.failed_at = new Date().getTime();
-				ad_manager.ad_fail("iads");
+			this.id = chartboost_ios_id;
+			this.key = chartboost_ios_key;
+			if (thePlatform == "android"){
+				this.id = chartboost_droid_id;
+				this.key = chartboost_droid_key;
+				window.chartboost.setUp(this.id, this.key);
+			} else if (thePlatform == "ios"){
+				Chartboost.createBanner({
+					appId: this.id,
+					appKey: this.key
+				});
+			}
+		}
+		return false;
+	};
+	
+	this.hide = function(){
+	};
+	
+	this.load_interstitial = function (){
+		if (thePlatform == "android"){
+			window.chartboost.preloadInterstitialAd("Default");
+		} else {
+			Chartboost.prepareInterstitial({adId: "interstitial/Home Screen", autoShow:false});
+		}
+		return true;
+	};
+	
+	this.show_interstitial = function (){
+		if (thePlatform == "android"){
+			window.chartboost.showInterstitialAd("Default");
+		} else {
+			Chartboost.showInterstitial();
+		}
+	};
+}
+
+function admob_ads(){
+	var scope = this;
+	this.available = typeof window.plugins != "undefined" && typeof window.plugins.AdMob != "undefined";
+	this.loaded = false;
+	this.failed_at = 0;
+	this.active = false;
+	this.priority = 2;
+	this.code = "";
+	this.code_int = "";
+	
+	this.init = function(){
+		if (!this.loaded){
+			this.loaded = true;
+			this.code = admob_code;
+			this.code_int = admob_code_int;
+			if (typeof admob_code_droid != "undefined" && thePlatform == "android"){
+				this.code = admob_code_droid;
+				this.code_int = admob_code_droid_int;
+			}
+			window.plugins.AdMob.setOptions({
+				publisherId: this.code,
+				interstitialAdId: this.code_int,
+				bannerAtTop: false, // set to true, to put banner at top
+				overlap: false, // set to true, to allow banner overlap webview
+				offsetTopBar: false, // set to true to avoid ios7 status bar overlap
+				isTesting: dev, // receiving test ad
+				autoShow: false // auto show interstitial ad when loaded
 			});
-			document.addEventListener("onFailedToReceiveAd", function(ret){
+			
+			document.addEventListener("onFailedToReceiveAd", function(data) {
 				scope.failed_at = new Date().getTime();
-				ad_manager.ad_fail("iads");
-			}, false);
-			document.addEventListener("onReceiveAd", function(){
-				if (!ad_manager.hide_others("iads")){
+				ad_manager.ad_fail("AdMob");
+			});
+			document.addEventListener("onReceiveAd", function(data){
+				if (!ad_manager.hide_others("AdMob")){
 					scope.hide();
 				}
 				scope.dshow();
-			}, false);
+			});
+			window.addEventListener("orientationchange", function(){
+				console.log(window.orientation);
+			});
+			window.plugins.AdMob.createBannerView();
 		} else {
 			this.dshow();
 		}
+		return true;
 	};
 	
 	this.dshow = function (){
 		var s = this;
 		setTimeout(function (){
 			s.show();
-		}, 1000);
+		}, 5000);
 	};
 	
 	this.show = function(){
+		console.log("admob try show");
 		if (this.priority <= ad_manager.pri_active && !this.active){
+			console.log("admob show");
 			ad_manager.pri_active = this.priority;
-			window.plugins.iAd.showAd(true);
 			this.active = true;
+			window.plugins.AdMob.createBannerView();
 			setTimeout(function (){
-				$(window).trigger("resize");
+				$(window).trigger('resize');
 			}, 1000);
 		}
 	};
 	
 	this.hide = function(){
+		console.log("admob try hide");
 		if (this.active){
+			console.log("admob hide");
 			ad_manager.pri_active = 999;
 			this.active = false;
-			window.plugins.iAd.showAd(false);
+			window.plugins.AdMob.destroyBannerView();
 		}
+	};
+	
+	this.load_interstitial = function (){
+		window.plugins.AdMob.createInterstitialView();
+		return true;
+	};
+	
+	this.show_interstitial = function (){
+		window.plugins.AdMob.showInterstitialAd(true,function(){},function(e){console.log(e);});
 	};
 }
 
-function admob(){
+function admobpro_ads(){
 	var scope = this;
 	this.available = typeof AdMob != "undefined";
 	this.loaded = false;
 	this.failed_at = 0;
 	this.active = false;
 	this.priority = 2;
+	this.code = "";
+	this.code_int = "";
 	
 	this.init = function(){
 		if (!this.loaded){
 			this.loaded = true;
-			var code = admob_code;
-			if (typeof admob_code_droid != "undefined" && thePlatform == "android")
-				code = admob_code_droid;
+			this.code = admob_code;
+			this.code_int = admob_code_int;
+			if (typeof admob_code_droid != "undefined" && thePlatform == "android"){
+				this.code = admob_code_droid;
+				this.code_int = admob_code_droid_int;
+			}
 			AdMob.createBanner({
-				adId: code,
+				adId: this.code,
 				adSize: "SMART_BANNER",
 				position: AdMob.AD_POSITION.BOTTOM_CENTER,
 				autoShow: false,
@@ -401,12 +482,12 @@ function admob(){
 				adExtras: {color_bg: "333333"}
 			});
 			
-			document.addEventListener("onAdFailLoad", function(data) {
+			document.addEventListener("onBannerFailedToReceive", function(data) {
 				scope.failed_at = new Date().getTime();
-				ad_manager.ad_fail("AdMob");
+				ad_manager.ad_fail("AdMobPro");
 			});
 			document.addEventListener("onAdLoaded", function(data){
-				if (!ad_manager.hide_others("AdMob")){
+				if (!ad_manager.hide_others("AdMobPro")){
 					scope.hide();
 				}
 				scope.dshow();
@@ -414,17 +495,20 @@ function admob(){
 		} else {
 			this.dshow();
 		}
+		return true;
 	};
 	
 	this.dshow = function (){
 		var s = this;
 		setTimeout(function (){
 			s.show();
-		}, 1000);
+		}, 5000);
 	};
 	
 	this.show = function(){
+		console.log("admobpro try show");
 		if (this.priority <= ad_manager.pri_active && !this.active){
+			console.log("admobpro show");
 			ad_manager.pri_active = this.priority;
 			this.active = true;
 			AdMob.showBanner(AdMob.AD_POSITION.BOTTOM_CENTER);
@@ -435,11 +519,109 @@ function admob(){
 	};
 	
 	this.hide = function(){
+		console.log("admobpro try hide");
 		if (this.active){
+			console.log("admobpro hide");
 			ad_manager.pri_active = 999;
 			this.active = false;
 			AdMob.hideBanner();
 		}
+	};
+	
+	this.load_interstitial = function (){
+		AdMob.prepareInterstitial({adId:this.code_int, isTesting: dev, autoShow:false});
+		return true;
+	};
+	
+	this.show_interstitial = function (){
+		AdMob.showInterstitial();
+	};
+}
+
+function admob2_ads(){
+	var scope = this;
+	this.available = typeof admob != "undefined";
+	this.loaded = false;
+	this.failed_at = 0;
+	this.active = false;
+	this.priority = 2;
+	this.code = "";
+	this.code_int = "";
+	
+	this.init = function(){
+		if (!this.loaded){
+			this.loaded = true;
+			this.code = admob_code;
+			this.code_int = admob_code_int;
+			if (typeof admob_code_droid != "undefined" && thePlatform == "android"){
+				this.code = admob_code_droid;
+				this.code_int = admob_code_droid_int;
+			}
+			
+			admob.initAdmob(this.code, this.code_int);
+			var params = new  admob.Params();
+			params.isTesting = dev;
+			admob.showBanner(admob.BannerSize.BANNER, admob.Position.BOTTOM_CENTER, params);
+			
+			document.addEventListener(admob.Event.onAdmobBannerFailedReceive, function(data) {
+				scope.failed_at = new Date().getTime();
+				ad_manager.ad_fail("admob2");
+			});
+			document.addEventListener(admob.Event.onAdmobBannerReceive, function(data){
+				if (!ad_manager.hide_others("admob2")){
+					scope.hide();
+				}
+				scope.dshow();
+			});
+			window.addEventListener("orientationchange", function(){
+				console.log(window.orientation);
+			});
+			window.plugins.AdMob.createBannerView();
+		} else {
+			this.dshow();
+		}
+		return true;
+	};
+	
+	this.dshow = function (){
+		var s = this;
+		setTimeout(function (){
+			s.show();
+		}, 5000);
+	};
+	
+	this.show = function(){
+		console.log("admob2 try show");
+		if (this.priority <= ad_manager.pri_active && !this.active){
+			console.log("admob2 show");
+			ad_manager.pri_active = this.priority;
+			this.active = true;
+			var params = new  admob.Params();
+			params.isTesting = dev;
+			admob.showBanner(admob.BannerSize.BANNER, admob.Position.BOTTOM_CENTER, params);
+			setTimeout(function (){
+				$(window).trigger('resize');
+			}, 1000);
+		}
+	};
+	
+	this.hide = function(){
+		console.log("admob2 try hide");
+		if (this.active){
+			console.log("admob2 hide");
+			ad_manager.pri_active = 999;
+			this.active = false;
+			admob.hideBanner()
+		}
+	};
+	
+	this.load_interstitial = function (){
+		admob.cacheInterstitial();
+		return true;
+	};
+	
+	this.show_interstitial = function (){
+		admob.showInterstitial();
 	};
 }
 
@@ -456,6 +638,7 @@ function house_ads(){
 		} else {
 			this.show();
 		}
+		return false;
 	};
 	
 	this.dshow = function (){
@@ -470,27 +653,49 @@ function house_ads(){
 	
 	this.hide = function(){
 	};
+	
+	this.load_interstitial = function (){
+		return false;
+	};
+	
+	this.show_interstitial = function (){
+	};
 }
 
 function admanager() {
-	this.ads = {"iads": new iads(), "AdMob": new admob(), "house": new house_ads()};
+	this.ads = {"Chartboost": new chartboost_ads(), "admob2": new admob2_ads(), "AdMobPro": new admobpro_ads(), "AdMob": new admob_ads(), "house": new house_ads()};
+	this.pri = ["Chartboost", "admob2", "AdMob", "AdMobPro", "house"];
 	this.pri_active = 999;
+	this.int_min_trig = 0;
+	this.int_last_trig = 0;
+	this.int_per_events = 0;
+	this.int_trigs = -1;
 	
 	this.init = function(){
-		for (var key in this.ads){
-			if (this.ads[key].available){
-				this.ads[key].init();
-				break;
-			}
+		console.log("ad manager startup");
+		if (inapp_has("removeads199"))
+			return;
+		if (!has_internet){
+			this.ad_fail();
 		}
 	};
 	
 	this.ad_fail = function(who){
-		this.ads[who].hide();
-		for(var key in this.ads){
+		who = who || false;
+		console.log("ad_fail");
+		if (who){
+			console.log("ad_fail: "+who);
+			this.ads[who].hide();
+		}
+		if (inapp_has("removeads199"))
+			return;
+		for (var i=0;i<this.pri.length;i++){
+			var key = this.pri[i];
+			console.log("ad check: "+key);
 			if (key != who && this.ads[key].available && this.ads[key].failed_at < (new Date()).getTime()-100000){
-				this.ads[key].init();
-				break;
+				console.log("ad init: "+key);
+				if (this.ads[key].init())
+					return;
 			}
 		}
 	};
@@ -506,6 +711,70 @@ function admanager() {
 			return true;
 		} else {
 			return false;
+		}
+	};
+	
+	this.hide = function (){
+		for(var key in this.ads){
+			this.ads[key].hide();
+		}
+	};
+	
+	this.show = function (){
+		this.ad_fail();
+	};
+	
+	this.load_interstitial = function (){
+		console.log("load_interstitial");
+		if (inapp_has("removeads199"))
+			return false;
+		if (this.int_per_events == -1){
+			return;
+		}
+		for (var i=0;i<this.pri.length;i++){
+			var key = this.pri[i];
+			if (this.ads[key].available){
+				console.log("load "+key+" interstitial");
+				if (this.ads[key].load_interstitial())
+					return key;
+			}
+		}
+	};
+	
+	this.show_interstitial = function (key){
+		console.log("show_interstitial");
+		if (inapp_has("removeads199"))
+			return;
+		if (this.int_per_events > 0 && this.int_trigs != -1){
+			++this.int_trigs;
+			if (this.int_trigs < this.int_per_events){
+				return;
+			}
+		} else if (this.int_per_events == -1){
+			return;
+		}
+		if (this.int_min_trig > 0){
+			var time = new Date().getTime();
+			if (this.int_last_trig + this.int_min_trig*60000 > time)
+				return;
+		}
+		if (key){
+			if (this.ads[key].available){
+				console.log(key+" interstitial");
+				this.ads[key].show_interstitial();
+				this.int_trigs = 0;
+				this.int_last_trig = new Date().getTime();
+			}
+		} else {
+			for (var i=0;i<this.pri.length;i++){
+				var key = this.pri[i];
+				if (this.ads[key].available){
+					console.log(key+" interstitial");
+					this.int_trigs = 0;
+					this.int_last_trig = new Date().getTime();
+					break;
+				}
+			}
 		}
 	};
 }
