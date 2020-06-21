@@ -57,7 +57,9 @@
 	<access origin="*" />
 	<allow-intent href="*" />
 	<gap:plugin name="cordova-plugin-splashscreen" source="npm" />
-	<gap:plugin name="cordova-plugin-google-analytics" source="npm" />
+	<gap:plugin name="cordova-plugin-google-analytics" source="npm">
+		<variable name="GMS_VERSION" value="11.0.1" />
+	</gap:plugin>
 	<gap:plugin name="cordova-plugin-statusbar" source="npm" />
 	<gap:plugin name="cordova-plugin-device" source="npm" />
 	<gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
@@ -66,7 +68,10 @@
 	<gap:plugin name="phonegap-plugin-push" source="npm">
 		<variable name="FCM_VERSION" value="11.0.1" />
 	</gap:plugin>
-	<gap:plugin name="com-admob-plugin" source="npm"/>
+	<!--<gap:plugin name="admob-google-cordova" source="npm">-->
+	<gap:plugin name="com-admob-plugin" source="npm">
+		<variable name="PLAY_SERVICES_VERSION" value="11.0.1" />
+	</gap:plugin>
 	<gap:plugin name="cordova-plugin-admobpro-firebase" source="npm">
 		<variable name="PLAY_SERVICES_VERSION" value="11.0.1" />
 		<variable name="ADMOB_APP_ID" value="" />
