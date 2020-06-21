@@ -70,7 +70,7 @@
 	</gap:plugin>
 	<!--<gap:plugin name="admob-google-cordova" source="npm">-->
 	<gap:plugin name="com-admob-plugin" source="npm">
-		<variable name="PLAY_SERVICES_VERSION" value="11.0.1" />
+		<!--<variable name="PLAY_SERVICES_VERSION" value="11.0.1" />-->
 	</gap:plugin>
 	<gap:plugin name="cordova-plugin-admobpro-firebase" source="npm">
 		<variable name="PLAY_SERVICES_VERSION" value="11.0.1" />
