@@ -558,6 +558,95 @@ function admob2_ads(){
 				this.code_int = admob_code_droid_int;
 			}
 			
+			admob.setOptions({
+				publisherId: this.code,
+				interstitialAdId: this.code_int,
+				autoShowBanner: true,
+				autoShowInterstitial: false,
+				autoShowRewarded: false,
+				isTesting: dev
+			});
+			
+			document.addEventListener(admob.Event.onAdFailedToLoad, function(data) {
+				scope.failed_at = new Date().getTime();
+				ad_manager.ad_fail("admob2");
+			});
+			document.addEventListener(admob.Event.onAdLoaded, function(data){
+				if (!ad_manager.hide_others("admob2")){
+					scope.hide();
+				}
+				scope.dshow();
+			});
+			window.addEventListener("orientationchange", function(){
+				console.log(window.orientation);
+			});
+			admob.createBannerView();
+		} else {
+			this.dshow();
+		}
+		return true;
+	};
+	
+	this.dshow = function (){
+		var s = this;
+		setTimeout(function (){
+			s.show();
+		}, 5000);
+	};
+	
+	this.show = function(){
+		console.log("admob2 try show");
+		if (this.priority <= ad_manager.pri_active && !this.active){
+			console.log("admob2 show");
+			ad_manager.pri_active = this.priority;
+			this.active = true;
+			admob.showBannerAd(true);
+			setTimeout(function (){
+				$(window).trigger('resize');
+			}, 1000);
+		}
+	};
+	
+	this.hide = function(){
+		console.log("admob2 try hide");
+		if (this.active){
+			console.log("admob2 hide");
+			ad_manager.pri_active = 999;
+			this.active = false;
+			admob.showBannerAd(false);
+		}
+	};
+	
+	this.load_interstitial = function (){
+		admob.requestInterstitialAd();
+		return true;
+	};
+	
+	this.show_interstitial = function (){
+		admob.showInterstitialAd();
+	};
+}
+
+function admob22_ads(){
+	var scope = this;
+	this.available = typeof admob != "undefined";
+	this.loaded = false;
+	this.failed_at = 0;
+	this.active = false;
+	this.priority = 2;
+	this.code = "";
+	this.code_int = "";
+	
+	this.init = function(){
+		if (!this.loaded){
+			this.loaded = true;
+			this.code = admob_code;
+			this.code_int = admob_code_int;
+			if (typeof admob_code_droid != "undefined" && thePlatform == "android"){
+				this.code = admob_code_droid;
+				this.code_int = admob_code_droid_int;
+			}
+			
 			admob.initAdmob(this.code, this.code_int);
 			var params = new  admob.Params();
 			params.isTesting = dev;
