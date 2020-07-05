@@ -70,7 +70,7 @@ function audio(){
 			//++g.objects_to_load;
 			this.buffers[name] = [];
 			var url_call = url.replace("_#", "_"+a);
-			if (file_cache){
+			if (typeof file_cache != "undefined"){
 				file_cache.get_file(url_call, function(data, url){
 					console.log(url_call, url);
 					scope.context.decodeAudioData(data, function(buffer) {
