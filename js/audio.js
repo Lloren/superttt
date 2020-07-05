@@ -67,7 +67,7 @@ function audio(){
 		on_load = on_load || false;
 		
 		for (var a=0; a<num; a++){
-			++g.objects_to_load;
+			//++g.objects_to_load;
 			this.buffers[name] = [];
 			var url_call = url.replace("_#", "_"+a);
 			file_cache.get_file(url_call, function(data, url){

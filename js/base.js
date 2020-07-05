@@ -978,7 +978,7 @@ function on_ready(){
 		} else {
 			complete_ready()
 		}
-	}, 1);
+	}, settings.get("delay_startup")?10000:1);
 }
 
 function complete_ready(){
@@ -1070,6 +1070,14 @@ $(function () {
 	});
 	$(document).on("touchend", ".touch_click", function(e){
 		$(this).click();
+	});
+	
+	click_event(".toggle_delay_start", function (e){
+		if (settings.get("delay_start")){
+			settings.set("delay_start", false);
+		} else {
+			settings.set("delay_start", true);
+		}
 	});
 	
 	if (typeof AppVersion != "undefined"){
