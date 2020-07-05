@@ -70,35 +70,35 @@ function audio(){
 			//++g.objects_to_load;
 			this.buffers[name] = [];
 			var url_call = url.replace("_#", "_"+a);
-			file_cache.get_file(url_call, function(data, url){
-				console.log(url_call, url);
-				scope.context.decodeAudioData(data, function(buffer) {
-					buffer.url_loc = url;
-					scope.buffers[name].push(buffer);
-					g.object_loaded();
-					if (on_load){
-						on_load(sec_info);
-					}
-				});
-			}, "arraybuffer");
-			
-			
-			
-			/*var request = new XMLHttpRequest();
-			request.open("GET", url_call, true);
-			request.responseType = "arraybuffer";
-
-			request.onload = function() {
-				var turl = this.responseURL;
-				scope.context.decodeAudioData(this.response, function(buffer) {
-					buffer.url_loc = turl;
-					scope.buffers[name].push(buffer);
-					if (on_load){
-						on_load(sec_info);
-					}
-				});
-			};
-			request.send();*/
+			if (file_cache){
+				file_cache.get_file(url_call, function(data, url){
+					console.log(url_call, url);
+					scope.context.decodeAudioData(data, function(buffer) {
+						buffer.url_loc = url;
+						scope.buffers[name].push(buffer);
+						g.object_loaded();
+						if (on_load){
+							on_load(sec_info);
+						}
+					});
+				}, "arraybuffer");
+			} else {
+				var request = new XMLHttpRequest();
+				request.open("GET", url_call, true);
+				request.responseType = "arraybuffer";
+				
+				request.onload = function() {
+					var turl = this.responseURL;
+					scope.context.decodeAudioData(this.response, function(buffer) {
+						buffer.url_loc = turl;
+						scope.buffers[name].push(buffer);
+						if (on_load){
+							on_load(sec_info);
+						}
+					});
+				};
+				request.send();
+			}
 		}
 	};
 	
@@ -160,3 +160,4 @@ function audio(){
 		return source;
 	};
 }
+var Audio = new audio();

@@ -518,20 +518,19 @@ function startup(){
 		}
 	}
 	
-	audio = new audio();
-	audio.load_sound("audio/music/bensound-acousticbreeze.mp3", "music1");
-	audio.load_sound("audio/music/bensound-cute.mp3", "music2");
-	audio.load_sound("audio/music/bensound-sunny.mp3", "music3");
-	audio.load_sound("audio/music/bensound-tenderness.mp3", "music4");
-	audio.load_sound("audio/music/bensound-ukulele.mp3", "music5");
+	Audio.load_sound("audio/music/bensound-acousticbreeze.mp3", "music1");
+	Audio.load_sound("audio/music/bensound-cute.mp3", "music2");
+	Audio.load_sound("audio/music/bensound-sunny.mp3", "music3");
+	Audio.load_sound("audio/music/bensound-tenderness.mp3", "music4");
+	Audio.load_sound("audio/music/bensound-ukulele.mp3", "music5");
 	
 	
-	audio.load_sound("audio/sfx/button_back.mp3", "button_back");
-	audio.load_sound("audio/sfx/button_click.mp3", "button_click");
-	audio.load_sound("audio/sfx/game_click.mp3", "game_click");
-	audio.load_sound("audio/sfx/game_lose_square.mp3", "game_lose_square");
-	audio.load_sound("audio/sfx/game_win.mp3", "game_win");
-	audio.load_sound("audio/sfx/game_win_square.mp3", "game_win_square");
+	Audio.load_sound("audio/sfx/button_back.mp3", "button_back");
+	Audio.load_sound("audio/sfx/button_click.mp3", "button_click");
+	Audio.load_sound("audio/sfx/game_click.mp3", "game_click");
+	Audio.load_sound("audio/sfx/game_lose_square.mp3", "game_lose_square");
+	Audio.load_sound("audio/sfx/game_win.mp3", "game_win");
+	Audio.load_sound("audio/sfx/game_win_square.mp3", "game_win_square");
 	
 	
 	var push = PushNotification.init({
