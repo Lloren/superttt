@@ -23,7 +23,7 @@ function audio(){
 		
 		this.channels["controls_quiet"] = this.context.createGain();
 		this.channels["controls_quiet"].playing = [];
-		this.channels["controls_quiet"].connect(this.channels['main']);
+		this.channels["controls_quiet"].connect(this.channels['controls']);
 		this.channels["controls_quiet"].gain.value = 0.5;
 		
 		this.channels["effects"] = this.context.createGain();
@@ -33,7 +33,7 @@ function audio(){
 		
 		this.channels["effects_quiet"] = this.context.createGain();
 		this.channels["effects_quiet"].playing = [];
-		this.channels["effects_quiet"].connect(this.channels['main']);
+		this.channels["effects_quiet"].connect(this.channels['effects']);
 		this.channels["effects_quiet"].gain.value = 0.1;
 		
 		this.channels["music"] = this.context.createGain();
