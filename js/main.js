@@ -68,7 +68,7 @@ var ping_timeout = false;
 
 var start_message = false;
 
-var audio = false;
+var Audio = false;
 
 var player_char = "x";
 var other_player_char = "o";
@@ -307,9 +307,9 @@ function process_turn(data){
 	if (data.grid_update){
 		$(".main_grid.grid_"+data.grid_update.grid+" .overlay").addClass("show").html(template("play_"+state_lookup[data.grid_update.state]));
 		if (data.type == player_num){
-			audio.play_sound("game_win_square", "controls");
+			Audio.play_sound("game_win_square", "controls");
 		} else {
-			audio.play_sound("game_lose_square", "controls");
+			Audio.play_sound("game_lose_square", "controls");
 		}
 	}
 	if (data.game_complete){
@@ -322,7 +322,7 @@ function process_turn(data){
 		if (data.type == 3){
 			title = 'Cats Game!';
 		} else if (data.type == player_num){
-			audio.play_sound("game_win", "controls");
+			Audio.play_sound("game_win", "controls");
 			title = '<i class="fa '+char_lookup[player_char]+'" style="color:#1c86ff;"></i> You Win!';
 		} else {
 			title = '<i class="fa '+char_lookup[player_char]+'" style="color:#ff3d1c;"></i> You Lost :-(';
@@ -584,17 +584,17 @@ function startup(){
 	$(document).on("mouseup touchend", function (e){//"not touched" event
 		if (!main_grid_touched && $(".board.highlight").length && !e.target.matches(".board.highlight")){
 			$(".board.highlight").removeClass("highlight");
-			audio.play_sound("button_back", "controls");
+			Audio.play_sound("button_back", "controls");
 		}
 	});
 	
 	click_event("#menubutton", function (e){
-		audio.play_sound("button_click", "controls");
+		Audio.play_sound("button_click", "controls");
 		open_menu();
 	});
 
 	click_event("#nav-overlay", function (e){
-		audio.play_sound("button_back", "controls");
+		Audio.play_sound("button_back", "controls");
 		close_menu();
 	}, false, true);
 
@@ -624,7 +624,7 @@ function startup(){
 			main_grid_touched = true;
 			setTimeout(function (){main_grid_touched = false;}, 200);
 			board.addClass("highlight");
-			audio.play_sound("game_click", "controls");
+			Audio.play_sound("game_click", "controls");
 		}
 	});
 
@@ -637,7 +637,7 @@ function startup(){
 				setTimeout(function (){
 					t.parents(".board").removeClass("highlight");
 				}, 100);
-				audio.play_sound("game_click", "controls");
+				Audio.play_sound("game_click", "controls");
 				var complete = process_move({board: t.parents(".main_grid").data("grid"), move: t.data("grid")}, player_num);
 				if (game_ai && !complete){
 					set_user_turn(false);
@@ -703,7 +703,7 @@ function startup(){
 	
 	click_event("#closebutton", function (e){
 		if ($(".page.show_bottom:visible")){
-			audio.play_sound("button_back", "controls");
+			Audio.play_sound("button_back", "controls");
 			show_page($(".page:not(.show_bottom):visible").attr("id"));
 		}
 	});
