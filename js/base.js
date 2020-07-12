@@ -9,6 +9,7 @@ var active_start = Date.now();
 var ad_manager = false;
 var thePlatform = "";
 var templates = {};
+var inapp_purcheses = [];
 
 String.prototype.ucfirst = function() {
 	return this.charAt(0).toUpperCase() + this.slice(1);
