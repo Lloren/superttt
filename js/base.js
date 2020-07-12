@@ -868,6 +868,53 @@ function admanager() {
 	};
 }
 
+function inapp_change(product){
+	console.log("inapp change: "+product.state);
+	console.log("inapp change", product);
+	var on = false;
+	if (product.state == store.APPROVED){
+		on = true;
+		product.finish();
+	} else if (product.state == store.FINISHED){
+		on = true;
+	} else if (product.state == store.OWNED){
+		on = true;
+	}
+	if (on){
+		var item = inapp_items[product.id];
+		if (item.save)
+			inapp_purcheses[product.id] = true;
+		window.localStorage.setItem("inapp_purcheses", JSON.stringify(inapp_purcheses));
+		item.owned();
+	}
+}
+
+function inapp_purchase(id, info){
+	var item = inapp_items[id];
+	if (!item){
+		console.log("unknown item: "+id);
+		return;
+	}
+	if (item.save)
+		inapp_purcheses[id] = true;
+	window.localStorage.setItem("inapp_purcheses", JSON.stringify(inapp_purcheses));
+	item.owned();
+	if (!item.save)
+		inAppPurchase.consume(info.productType, info.receipt, info.signature);
+}
+
+function inapp_has(id, re_run){
+	if (!inapp_purcheses){
+		inapp_purcheses = JSON.parse(window.localStorage.getItem("inapp_purcheses") || '{}');
+	}
+	var has = inapp_purcheses[id] || false;
+	console.log("inapp_has", id, has);
+	if (has && re_run){
+		inapp_items[id].owned(re_run);
+	}
+	return has;
+}
+
 function device_info(){
 	var dev = {};
 	if (typeof device != "undefined"){
