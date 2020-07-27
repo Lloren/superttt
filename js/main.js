@@ -166,7 +166,6 @@ function swap_players(){
 }
 
 function open_homepage(){
-	console.log("test");
 	if (window.localStorage.getItem("AI_1")){
 		$("#AI_1").addClass("has_saved");
 	} else {
@@ -477,8 +476,8 @@ function check_user(){
 	});
 }
 
-function make_call(url, add_data, callback, on_error){
-	$.getJSON(base_url+url, $.extend({uuid: settings.get("uuid"), user_id: settings.get("user_id")}, add_data), function (data){manage_response(data, callback, on_error)}).fail(function (data, textStatus, errorThrown){console.log("fail", data, textStatus, errorThrown)});
+function make_call(url, add_data, callback, settings){
+	$.ajax(base_url+url, {type: settings.type || "GET", dataType: settings.dataType || "json", data: $.extend({uuid: settings.get("uuid"), user_id: settings.get("user_id")}, add_data), success:function (data){manage_response(data, callback, settings.on_error || false)}}).fail(function (data, textStatus, errorThrown){console.log("fail", data, textStatus, errorThrown)});
 }
 
 function manage_response(data, callback, on_error){
@@ -490,7 +489,7 @@ function manage_response(data, callback, on_error){
 		open_modal({title: "Error"+(data.mess.Error.length > 1?"s":""), content:mess});
 		if (on_error)
 			callback(data);
-	} else {
+	} else if (callback){
 		callback(data);
 	}
 }
@@ -559,7 +558,7 @@ function startup(){
 		if (has_internet){
 			var push_info = JSON.stringify(data);
 			if (window.localStorage.getItem("push_info") != push_info){
-				make_call("/ajax/push.php?action=subscribe", {push_info: push_info});
+				make_call("/ajax/push.php?action=subscribe", {push_info: push_info}, false, {type: "post"});
 				window.localStorage.setItem("push_info", push_info);
 			}
 		}
