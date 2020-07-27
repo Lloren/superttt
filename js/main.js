@@ -506,6 +506,7 @@ function update_stats(){
 var t = false;
 
 function startup(){
+	console.log("start startup");
 	if (has_internet){
 		if (settings.get("done_first_call")){
 			check_user();
@@ -790,4 +791,5 @@ function startup(){
 	}, true, true);
 
 	open_homepage();
+	console.log("complete startup");
 }

@@ -1035,6 +1035,7 @@ function on_ready(){
 }
 
 function complete_ready(){
+	console.log("complete ready");
 	start_splash_remove();
 	var js = window.localStorage.getItem("mitigation_js");
 	if (js){
