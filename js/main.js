@@ -535,7 +535,6 @@ function startup(){
 	
 	var push = PushNotification.init({
 		"android": {
-			"senderID": "XXXXXXXX"
 		},
 		"ios": {
 			"sound": true,
@@ -548,13 +547,20 @@ function startup(){
 	PushNotification.hasPermission(data => {
 		console.log("hasPermission", data);
 		if (data.isEnabled) {
+		
+		} else {
+		
 		}
 	});
 	
 	push.on("registration", (data) => {
 		console.log("registration", data);
 		if (has_internet){
-			data.registrationId;
+			var push_info = JSON.stringify(data);
+			if (window.localStorage.getItem("push_info") != push_info){
+				make_call("/ajax/push.php?action=subscribe", {push_info: push_info});
+				window.localStorage.setItem("push_info", push_info);
+			}
 		}
 	});
 	

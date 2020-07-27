@@ -568,11 +568,11 @@ function admob2_ads(){
 				isTesting: dev
 			});
 			
-			document.addEventListener(admob.Event.onAdFailedToLoad, function(data) {
+			document.addEventListener(admob.onAdFailedToLoad, function(data) {
 				scope.failed_at = new Date().getTime();
 				ad_manager.ad_fail("admob2");
 			});
-			document.addEventListener(admob.Event.onAdLoaded, function(data){
+			document.addEventListener(admob.onAdLoaded, function(data){
 				if (!ad_manager.hide_others("admob2")){
 					scope.hide();
 				}
@@ -940,6 +940,11 @@ function app_info(){
 var started = false;
 function on_ready(){
 	console.log("on_ready");
+	var delay = 1;
+	if (dev && typeof settings.get("delay_startup") == "undefined" || settings.get("delay_startup")){
+		console.log("delay_startup");
+		delay = 10000;
+	}
 	setTimeout(function (){
 		console.log("on_ready2");
 		if (started){
@@ -1026,7 +1031,7 @@ function on_ready(){
 		} else {
 			complete_ready()
 		}
-	}, settings.get("delay_startup")?10000:1);
+	}, delay);
 }
 
 function complete_ready(){
@@ -1122,11 +1127,18 @@ $(function () {
 	
 	click_event(".toggle_delay_start", function (e){
 		if (settings.get("delay_start")){
+			$(".toggle_delay_start span").html("is_off");
 			settings.set("delay_start", false);
 		} else {
 			settings.set("delay_start", true);
+			$(".toggle_delay_start span").html("is_on");
 		}
 	});
+	if (settings.get("delay_start")){
+		$(".toggle_delay_start span").html("is_on");
+	} else {
+		$(".toggle_delay_start span").html("is_off");
+	}
 	
 	if (typeof AppVersion != "undefined"){
 		$(".version").html("("+AppVersion.version+")");
