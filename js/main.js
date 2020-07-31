@@ -513,8 +513,8 @@ function update_stats(){
 	$("#stat_online").html(stats.get("online_games"));
 }
 
-function timeout(ms) {
-	return new Promise(resolve => setTimeout(resolve, ms));
+async function timeout(ms) {
+	return await new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function startup(){
@@ -525,7 +525,7 @@ function startup(){
 		} else {
 			settings.set("done_first_call", true);
 			check_user();
-			await timeout(250);
+			timeout(250);
 			check_user();
 		}
 	}
