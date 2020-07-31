@@ -3,12 +3,12 @@
 		xmlns:android	= "http://schemas.android.com/apk/res/android"
 		id				= "com.twodio.superttt"
 		version			= "1.0.1">
-	<name>Super TicTakToe</name>
+	<name>Super TicTakToe Dev</name>
 	<description>
-		Super Tic Tac Toe Game
+		A Super Tic-Tac-Toe Game
 	</description>
-	<author email="support@2dio.com" href="http://2dio.com">
-		2Dio, Inc.
+	<author email="support@2dio.com" href="https://2dio.com">
+		2Dio Studio
 	</author>
 	<content src="index.html" />
 
@@ -18,10 +18,10 @@
 	<preference name="phonegap-version" value="cli-9.0.0" />
 
 	<!-- Android SDK Version -->
-	<preference name="android-minSdkVersion" value="19" />
+	<preference name="android-minSdkVersion" value="26" />
 	<preference name="android-cdvCompileSdkVersion" value="28" />
 	<!-- iOS Version -->
-	<preference name="deployment-target" value="6.1" />
+	<preference name="deployment-target" value="8.0" />
 
 	<preference name="orientation" value="portrait" />
 	<gap:config-file platform="ios" parent="UISupportedInterfaceOrientations" mode="replace">
@@ -49,9 +49,13 @@
 	<preference name="StatusBarBackgroundColor" value="#000000" />
 	<preference name="StatusBarStyle" value="lightcontent" />
 
-	<preference name="SplashScreen" value="splash" />
-	<preference name="SplashScreenDelay" value="10000" />
-	<preference name="AutoHideSplashScreen" value="false" />
+	<preference name="SplashScreenDelay" value="5000" />
+	<preference name="FadeSplashScreenDuration" value="1000"/>
+	<preference name="ShowSplashScreenSpinner" value="false"/>
+	<preference name="AutoHideSplashScreen" value="true" />
+
+	<preference name="SuppressesLongPressGesture" value="true" />
+	<preference name="Suppresses3DTouchGesture" value="false" />
 
 	<gap:plugin name="cordova-plugin-whitelist" source="npm" />
 	<access origin="*" />
@@ -108,23 +112,22 @@
 	<icon src="icon.png" />
 	<gap:splash src="splash.png" /> <!-- ??? *Breaks iOS build/preferences sometimes ??? -->
 
-	<!-- Android Icons -->
-	<icon src="img/icons/android/ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
-	<icon src="img/icons/android/mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
-	<icon src="img/icons/android/hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
-	<icon src="img/icons/android/xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
-	<icon src="img/icons/android/xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
-	<icon src="img/icons/android/xxxhdpi.png" gap:platform="android" gap:qualifier="xxxhdpi" />
-
-	<!-- Android Splash -->
-	<gap:splash src="img/splash/android/ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
-	<gap:splash src="img/splash/android/mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
-	<gap:splash src="img/splash/android/hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
-	<gap:splash src="img/splash/android/xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
-	<gap:splash src="img/splash/android/xxhdpi.png" gap:platform="android" gap:qualifier="xxhdpi" />
-	<gap:splash src="img/splash/android/landscape-ldpi.png" gap:platform="android" gap:qualifier="land-ldpi" />
-	<gap:splash src="img/splash/android/landscape-mdpi.png" gap:platform="android" gap:qualifier="land-mdpi" />
-	<gap:splash src="img/splash/android/landscape-hdpi.png" gap:platform="android" gap:qualifier="land-hdpi" />
-	<gap:splash src="img/splash/android/landscape-xhdpi.png" gap:platform="android" gap:qualifier="land-xhdpi" />
-	<gap:splash src="img/splash/android/landscape-xxhdpi.png" gap:platform="android" gap:qualifier="land-xxhdpi" />
+	<platform name="android">
+		<preference name="SplashMaintainAspectRatio" value="true"/>
+		<!--<preference name="SplashShowOnlyFirstTime" value="true"/>-->
+		<!-- Android Icons -->
+		<icon density="ldpi" src="res/icon/android/ldpi.png"/>
+		<icon density="mdpi" src="res/icon/android/mdpi.png"/>
+		<icon density="hdpi" src="res/icon/android/hdpi.png"/>
+		<icon density="xhdpi" src="res/icon/android/xhdpi.png"/>
+		<icon density="xxhdpi" src="res/icon/android/xxhdpi.png"/>
+		<icon density="xxxhdpi" src="res/icon/android/xxxhdpi.png"/>
+		 <!-- Android Splash Portrait -->
+		<splash density="port-ldpi" src="res/screen/android/splash-port-ldpi.png"/>
+		<splash density="port-mdpi" src="res/screen/android/splash-port-mdpi.png"/>
+		<splash density="port-hdpi" src="res/screen/android/splash-port-hdpi.png"/>
+		<splash density="port-xhdpi" src="res/screen/android/splash-port-xhdpi.png"/>
+		<splash density="port-xxhdpi" src="res/screen/android/splash-port-xxhdpi.png"/>
+		<splash density="port-xxxhdpi" src="res/screen/android/splash-port-xxxhdpi.png"/>
+	</platform>
 </widget>

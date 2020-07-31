@@ -86,7 +86,7 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 		#menubutton span, #homebutton span, #backbutton span, #closebutton span, #forfeitbutton span {font-size:0.6em; position:absolute; left:40px;}
 			#ronlinebutton span, #rprofilebutton span, #rquitbutton span, #rleavebutton span {font-size:0.6em; position:absolute; right:40px;}
 	#header span.rmenu {position:absolute; width:50px; font-size:18px; text-align:center; right:0; top:0; color:#FFF;}
-		#header span.lmenu, #header span.rmenu {opacity:0; -webkit-transition: opacity 200ms linear; pointer-events: none;}
+		#header span.lmenu, #header span.rmenu {height:45px; line-height:45px; opacity:0; -webkit-transition: opacity 200ms linear; pointer-events: none;}
 			#header span.lmenu.active, #header span.rmenu.active {opacity:1; z-index:1; pointer-events: auto;}
 			#header span.lmenu.active:active, #header span.rmenu.active:active {background-color:#444; opacity:0.9;}
 				#header #ruser.rmenu, #header #rusers.rmenu {}
