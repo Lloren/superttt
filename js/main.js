@@ -476,8 +476,9 @@ function check_user(){
 	});
 }
 
-function make_call(url, add_data, callback, settings){
-	$.ajax(base_url+url, {type: settings.type || "GET", dataType: settings.dataType || "json", data: $.extend({uuid: settings.get("uuid"), user_id: settings.get("user_id")}, add_data), success:function (data){manage_response(data, callback, settings.on_error || false)}}).fail(function (data, textStatus, errorThrown){console.log("fail", data, textStatus, errorThrown)});
+function make_call(url, add_data, callback, sets){
+	sets = sets || {};
+	$.ajax(base_url+url, {type: sets.type || "GET", dataType: sets.dataType || "json", data: $.extend({uuid: settings.get("uuid"), user_id: settings.get("user_id")}, add_data), success:function (data){manage_response(data, callback, sets.on_error || false)}}).fail(function (data, textStatus, errorThrown){console.log("fail", data, textStatus, errorThrown)});
 }
 
 function manage_response(data, callback, on_error){
@@ -556,6 +557,7 @@ function startup(){
 	push.on("registration", (data) => {
 		console.log("registration", data);
 		if (has_internet){
+			data.platform = device_info().platform;
 			var push_info = JSON.stringify(data);
 			if (window.localStorage.getItem("push_info") != push_info){
 				make_call("/ajax/push.php?action=subscribe", {push_info: push_info}, false, {type: "post"});
