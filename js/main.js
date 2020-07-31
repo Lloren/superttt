@@ -478,7 +478,16 @@ function check_user(){
 
 function make_call(url, add_data, callback, sets){
 	sets = sets || {};
-	$.ajax(base_url+url, {type: sets.type || "GET", dataType: sets.dataType || "json", data: $.extend({uuid: settings.get("uuid"), user_id: settings.get("user_id")}, add_data), success:function (data){manage_response(data, callback, sets.on_error || false)}}).fail(function (data, textStatus, errorThrown){console.log("fail", data, textStatus, errorThrown)});
+	$.ajax(base_url+url, {
+		type: sets.type || "GET",
+		dataType: sets.dataType || "json",
+		data: $.extend({uuid: settings.get("uuid"), user_id: settings.get("user_id")}, add_data),
+		success:function (data){
+			manage_response(data, callback, sets.on_error || false);
+		}
+	}).fail(function (data, textStatus, errorThrown){
+		console.log("fail", data, textStatus, errorThrown);
+	});
 }
 
 function manage_response(data, callback, on_error){
@@ -503,7 +512,10 @@ function update_stats(){
 	$("#stat_ai_complete").html(stats.get("ai_games_complete"));
 	$("#stat_online").html(stats.get("online_games"));
 }
-var t = false;
+
+function timeout(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function startup(){
 	console.log("start startup");
@@ -513,9 +525,8 @@ function startup(){
 		} else {
 			settings.set("done_first_call", true);
 			check_user();
-			setTimeout(function (){
-				check_user();
-			}, 500);
+			await timeout(250);
+			check_user();
 		}
 	}
 	
@@ -568,6 +579,7 @@ function startup(){
 	
 	push.on("notification", (data) => {
 		console.log("notification", data);
+		process_move({board: data.additionalData.board, move: data.additionalData.move}, other_num);
 		// data.message,
 		// data.title,
 		// data.count,
@@ -637,16 +649,16 @@ function startup(){
 	});
 
 	click_event(".highlight .sub_grid", function (e){
-		var t = $(this);
-		//console.log(user_turn, player_num != 0, (t.parents(".board").hasClass("highlight") && !main_grid_touched), t.parents(".board").hasClass("highlight"), !main_grid_touched);
-		if (user_turn && player_num != 0 && (t.parents(".board").hasClass("highlight") && !main_grid_touched)){
+		var tmp_grid = $(this);
+		//console.log(user_turn, player_num != 0, (tmp_grid.parents(".board").hasClass("highlight") && !main_grid_touched), tmp_grid.parents(".board").hasClass("highlight"), !main_grid_touched);
+		if (user_turn && player_num != 0 && (tmp_grid.parents(".board").hasClass("highlight") && !main_grid_touched)){
 			$("#pre_choices").hide();
-			if (!t.find(".fa").length){
+			if (!tmp_grid.find(".fa").length){
 				setTimeout(function (){
-					t.parents(".board").removeClass("highlight");
+					tmp_grid.parents(".board").removeClass("highlight");
 				}, 100);
 				Audio.play_sound("game_click", "controls");
-				var complete = process_move({board: t.parents(".main_grid").data("grid"), move: t.data("grid")}, player_num);
+				var complete = process_move({board: tmp_grid.parents(".main_grid").data("grid"), move: tmp_grid.data("grid")}, player_num);
 				if (game_ai && !complete){
 					set_user_turn(false);
 					setTimeout(function (){
@@ -658,7 +670,7 @@ function startup(){
 						});
 					}, 400);
 				} else if (game_online){
-					make_call("/ajax/game_call.php?callback=?", {"action": "move", "game_id": game_online, "board": t.parents(".main_grid").data("grid"), "move": t.data("grid")}, function (data){
+					make_call("/ajax/game_call.php?callback=?", {"action": "move", "game_id": game_online, "board": tmp_grid.parents(".main_grid").data("grid"), "move": tmp_grid.data("grid")}, function (data){
 						if (data.good_move){
 							last_move_id = data.move_id;
 							$(".board.content > .overlay").addClass("show").html("<div>"+template("play_"+player_char)+"'s Turn</div>");
