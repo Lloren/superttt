@@ -84,7 +84,7 @@ var char_lookup = {"x": "fa-times", "o": "fa-circle-o", "h": "fa-square-o"};
 var ai_types = ["none", "Easy", "Medium", "Hard", "Expert"];
 function start_game(type, t2, load){
 	load = load || false;
-	console.log(type, t2, load);
+	console.log("start_game", type, t2, load);
 	game_type = type;
 	game_ai = false;
 	game_online = false;
@@ -234,7 +234,7 @@ function open_game(){
 			}
 			user_turn = data.your_turn == "1";
 			console.log("your turn", user_turn);
-			if (!user_turn){
+			if (false && !user_turn){
 				game_check_timeout = setTimeout(function () { check_status(); }, 5000);
 			}
 			game = new Game(data);
@@ -424,7 +424,7 @@ function game_format(game){
 var online_check_handle = false;
 function load_online(calc){
 	calc = calc || 1;
-	online_check_handle = setTimeout(function (){load_online(calc+1);}, calc*10000);
+	//online_check_handle = setTimeout(function (){load_online(calc+1);}, calc*10000);
 	make_call("/ajax/app_online.php", {}, function (data){
 		if (data.queue_id){
 			$("#find_opponent").hide();
@@ -579,7 +579,13 @@ function startup(){
 	
 	push.on("notification", (data) => {
 		console.log("notification", data);
-		process_move({board: data.additionalData.board, move: data.additionalData.move}, other_num);
+		if (data.additionalData.type == "move"){
+			if ($("#game").is(":visible") && game_online == data.additionalData.game_id){
+				process_move({board: data.additionalData.board, move: data.additionalData.move}, other_num);
+			} else if ($("#online").is(":visible")){
+				load_online();
+			}
+		}
 		// data.message,
 		// data.title,
 		// data.count,
