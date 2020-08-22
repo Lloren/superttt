@@ -1066,13 +1066,14 @@ function onLoad(){
 	document.addEventListener("offline", function (){
 		has_internet = navigator.connection.type != Connection.NONE;
 	}, false);
-	document.addEventListener("pause", function(){
+	document.addEventListener("pause", function(e){
 		stats.add("active_time", Date.now() - active_start);
 		stats.save();
-		console.log("pause");
+		console.log("pause", e);
 	}, false);
-	document.addEventListener("resume", function (){
+	document.addEventListener("resume", function (e){
 		active_start = Date.now();
+		console.log("resume", e);
 	}, false);
 }
 

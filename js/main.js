@@ -65,6 +65,7 @@ var last_move_num = 0;
 var game_check_timeout = false;
 var ping_timeout = false;
 
+var push_enabled = false;
 
 var start_message = false;
 
@@ -234,7 +235,7 @@ function open_game(){
 			}
 			user_turn = data.your_turn == "1";
 			console.log("your turn", user_turn);
-			if (false && !user_turn){
+			if (!push_enabled && !user_turn){
 				game_check_timeout = setTimeout(function () { check_status(); }, 5000);
 			}
 			game = new Game(data);
@@ -559,9 +560,9 @@ function startup(){
 	PushNotification.hasPermission(data => {
 		console.log("hasPermission", data);
 		if (data.isEnabled) {
-		
+			push_enabled = true;
 		} else {
-		
+			push_enabled = false;
 		}
 	});
 	
