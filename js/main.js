@@ -593,14 +593,15 @@ function startup(){
 	push.on("notification", (data) => {
 		console.log("notification", data);
 		if (data.additionalData.type == "move"){
-			last_push_game = data.additionalData.game_id;
 			if ($("#game").is(":visible")){
 				if (game_online == data.additionalData.game_id){
 					process_move({board: data.additionalData.board, move: data.additionalData.move}, other_num);
 				} else {
+					last_push_game = data.additionalData.game_id;
 					add_notification();
 				}
 			} else if ($("#online").is(":visible")){
+				last_push_game = data.additionalData.game_id;
 				load_online();
 			}
 		}
