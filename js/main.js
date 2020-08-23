@@ -66,6 +66,7 @@ var game_check_timeout = false;
 var ping_timeout = false;
 
 var push_enabled = false;
+var last_push_game = false;
 
 var start_message = false;
 
@@ -427,6 +428,7 @@ function load_online(calc){
 	calc = calc || 1;
 	//online_check_handle = setTimeout(function (){load_online(calc+1);}, calc*10000);
 	make_call("/ajax/app_online.php", {}, function (data){
+		add_notification(true);
 		if (data.queue_id){
 			$("#find_opponent").hide();
 			$("#leave_queue").show();
@@ -463,6 +465,7 @@ function unload_online(){
 }
 
 function check_user(){
+	console.log("check_user");
 	make_call("/ajax/settings.php", {action:"check"}, function (data){
 		console.log("check_user", data);
 		if (data.user_id){
@@ -514,6 +517,14 @@ function update_stats(){
 	$("#stat_online").html(stats.get("online_games"));
 }
 
+function add_notification(hide){
+	if (hide){
+		$("#notification_notice").html(0).hide();
+	} else {
+		$("#notification_notice").html($("#notification_notice").html()*1 + 1).show();
+	}
+}
+
 async function timeout(ms) {
 	return await new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -524,6 +535,7 @@ function startup(){
 		if (settings.get("done_first_call")){
 			check_user();
 		} else {
+			console.log("first internet call action");
 			settings.set("done_first_call", true);
 			check_user();
 			timeout(250);
@@ -581,8 +593,13 @@ function startup(){
 	push.on("notification", (data) => {
 		console.log("notification", data);
 		if (data.additionalData.type == "move"){
-			if ($("#game").is(":visible") && game_online == data.additionalData.game_id){
-				process_move({board: data.additionalData.board, move: data.additionalData.move}, other_num);
+			last_push_game = data.additionalData.game_id;
+			if ($("#game").is(":visible")){
+				if (game_online == data.additionalData.game_id){
+					process_move({board: data.additionalData.board, move: data.additionalData.move}, other_num);
+				} else {
+					add_notification();
+				}
 			} else if ($("#online").is(":visible")){
 				load_online();
 			}
@@ -602,6 +619,12 @@ function startup(){
 	
 	
 	
+	document.addEventListener("resume", function (e){
+		if (last_push_game){
+			start_game("online", last_push_game);
+			last_push_game = false;
+		}
+	}, false);
 	
 	
 	

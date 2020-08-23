@@ -92,6 +92,14 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 				#header #ruser.rmenu, #header #rusers.rmenu {}
 	#header h1 {position:relative; top:-3px; font-weight:normal; color:#FFF; margin:0; font-size:22px; text-align:center; letter-spacing:2px; text-transform:uppercase;}
 		#header h1 span {position:absolute; right:0; bottom:-16px; left:0; font-size:0.7em; color:#BBB;}
+	#notification_notice {top: 2px;
+		right: 80px;
+		background: yellow;
+		position: absolute;
+		line-height: initial;
+		pointer-events: none;
+		padding: 0 5px;
+		border-radius: 100px;}
 
 .logo {line-height:1.1em; padding-top:6px; text-align:center;}
 		.content .logo {font-family: 'Fredericka the Great'; color:#111; padding-top:0;}
