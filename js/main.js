@@ -426,7 +426,8 @@ function game_format(game){
 var online_check_handle = false;
 function load_online(calc){
 	calc = calc || 1;
-	//online_check_handle = setTimeout(function (){load_online(calc+1);}, calc*10000);
+	if (!push_enabled)
+		online_check_handle = setTimeout(function (){load_online(calc+1);}, calc*10000);
 	make_call("/ajax/app_online.php", {}, function (data){
 		add_notification(true);
 		if (data.queue_id){
@@ -557,66 +558,67 @@ function startup(){
 	Audio.load_sound("audio/sfx/game_win.mp3", "game_win");
 	Audio.load_sound("audio/sfx/game_win_square.mp3", "game_win_square");
 	
-	
-	var push = PushNotification.init({
-		"android": {
-		},
-		"ios": {
-			"sound": true,
-			"vibration": true,
-			"badge": true,
-			"clearBadge": true
-		}
-	});
-	
-	PushNotification.hasPermission(data => {
-		console.log("hasPermission", data);
-		if (data.isEnabled) {
-			push_enabled = true;
-		} else {
-			push_enabled = false;
-		}
-	});
-	
-	push.on("registration", (data) => {
-		console.log("registration", data);
-		if (has_internet){
-			data.platform = device_info().platform;
-			var push_info = JSON.stringify(data);
-			if (window.localStorage.getItem("push_info") != push_info){
-				make_call("/ajax/push.php?action=subscribe", {push_info: push_info}, false, {type: "post"});
-				window.localStorage.setItem("push_info", push_info);
+	if (PushNotification){
+		var push = PushNotification.init({
+			"android": {
+			},
+			"ios": {
+				"sound": true,
+				"vibration": true,
+				"badge": true,
+				"clearBadge": true
 			}
-		}
-	});
-	
-	push.on("notification", (data) => {
-		console.log("notification", data);
-		if (data.additionalData.type == "move"){
-			if ($("#game").is(":visible")){
-				if (game_online == data.additionalData.game_id){
-					process_move({board: data.additionalData.board, move: data.additionalData.move}, other_num);
-				} else {
-					last_push_game = data.additionalData.game_id;
-					add_notification();
+		});
+		
+		PushNotification.hasPermission(data => {
+			console.log("hasPermission", data);
+			if (data.isEnabled) {
+				push_enabled = true;
+			} else {
+				push_enabled = false;
+			}
+		});
+		
+		push.on("registration", (data) => {
+			console.log("registration", data);
+			if (has_internet){
+				data.platform = device_info().platform;
+				var push_info = JSON.stringify(data);
+				if (window.localStorage.getItem("push_info") != push_info){
+					make_call("/ajax/push.php?action=subscribe", {push_info: push_info}, false, {type: "post"});
+					window.localStorage.setItem("push_info", push_info);
 				}
-			} else if ($("#online").is(":visible")){
-				last_push_game = data.additionalData.game_id;
-				load_online();
 			}
-		}
-		// data.message,
-		// data.title,
-		// data.count,
-		// data.sound,
-		// data.image,
-		// data.additionalData
-	});
-	
-	push.on("error", (e) => {
-		console.log("error", e);
-		// e.message
-	});
+		});
+		
+		push.on("notification", (data) => {
+			console.log("notification", data);
+			if (data.additionalData.type == "move"){
+				if ($("#game").is(":visible")){
+					if (game_online == data.additionalData.game_id){
+						process_move({board: data.additionalData.board, move: data.additionalData.move}, other_num);
+					} else {
+						last_push_game = data.additionalData.game_id;
+						add_notification();
+					}
+				} else if ($("#online").is(":visible")){
+					last_push_game = data.additionalData.game_id;
+					load_online();
+				}
+			}
+			// data.message,
+			// data.title,
+			// data.count,
+			// data.sound,
+			// data.image,
+			// data.additionalData
+		});
+		
+		push.on("error", (e) => {
+			console.log("error", e);
+			// e.message
+		});
+	}
 	
 	
 	
@@ -763,6 +765,12 @@ function startup(){
 		start_game("online", $(this).data("game_id"));
 	}, true);
 	
+	$("#play_friend_name").on("keyup", function (e){
+		console.log(e);
+		if (e.which == 13){
+			$("#play_friend").trigger("click_event");
+		}
+	});
 	click_event("#play_friend", function (e){
 		open_modala("Searching...", true);
 		make_call("/ajax/queue_call.php", {action: "friend", name: $("#play_friend_name").val()}, function (data){
