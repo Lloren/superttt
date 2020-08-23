@@ -1128,15 +1128,15 @@ $(function () {
 	});
 	
 	click_event(".toggle_delay_start", function (e){
-		if (settings.get("delay_start")){
+		if (settings.get("delay_startup")){
 			$(".toggle_delay_start span").html("is_off");
-			settings.set("delay_start", false);
+			settings.set("delay_startup", false);
 		} else {
-			settings.set("delay_start", true);
+			settings.set("delay_startup", true);
 			$(".toggle_delay_start span").html("is_on");
 		}
 	});
-	if (settings.get("delay_start")){
+	if (settings.get("delay_startup")){
 		$(".toggle_delay_start span").html("is_on");
 	} else {
 		$(".toggle_delay_start span").html("is_off");

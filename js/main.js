@@ -558,7 +558,7 @@ function startup(){
 	Audio.load_sound("audio/sfx/game_win.mp3", "game_win");
 	Audio.load_sound("audio/sfx/game_win_square.mp3", "game_win_square");
 	
-	if (PushNotification){
+	if (typeof PushNotification !== "undefined"){
 		var push = PushNotification.init({
 			"android": {
 			},
