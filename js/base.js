@@ -50,7 +50,7 @@ function Settings(save_key, def_data){
 		}
 	};
 }
-window.settings = new Settings(false, '{music: true, sound_effects: true, animation: "zoom"}');
+window.settings = new Settings(false, '{"music": true, "sound_effects": true, "animation": "zoom"}');
 
 function Stats(){
 	var scope = this;
