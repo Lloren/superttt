@@ -356,6 +356,12 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 			#game .ubar #game_player_turn .fa-circle-o {color:#d23f3f;}
 #game .board.content {top:calc(50% + -35px);}
 
+#replay_game {position:absolute; bottom:0; width:100%; text-align:center; background-color:rgba(19, 157, 218, 0.7); height:4vmax; line-height:4vmax; color:#FFF;}
+	#replay_game div {display:inline;}
+#replay_step_back {}
+#replay_play {}
+#replay_step_forward {}
+
 .board{
 	position: absolute;
 	width: 100%;

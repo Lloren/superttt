@@ -210,7 +210,7 @@ function open_game(){
 		type = "Local";
 		other = "Them";
 	} else if (game_type == "online"){
-		var leave_page = "online";
+		leave_page = "online";
 		type = "Online";
 		other = "Them"
 	}
@@ -650,6 +650,7 @@ function startup(){
 				if ($("#game").is(":visible")){
 					if (game_online == data.additionalData.game_id){
 						process_move({board: data.additionalData.board, move: data.additionalData.move}, other_num);
+						set_user_turn(true);
 					} else {
 						last_push_game = data.additionalData.game_id;
 						add_notification();
@@ -674,8 +675,18 @@ function startup(){
 	}
 	
 	
-	
+	var was_music = false;
+	document.addEventListener("pause", function (e){
+		if (Audio.channels["music"].gain.value){
+			was_music = true;
+			Audio.set_volume("music", 0);
+		}
+	}, false);
 	document.addEventListener("resume", function (e){
+		if (was_music){
+			was_music = false;
+			Audio.set_volume("music", 0.5);
+		}
 		if (last_push_game){
 			start_game("online", last_push_game);
 			last_push_game = false;
