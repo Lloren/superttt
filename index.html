@@ -5,17 +5,33 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
 	<title>SuperTTT</title>
-	<meta name="description" content="Super Tic Tac Toe Game" />
-	<meta name="author" content="2Dio" />
+	<meta name="description" content="Super Tic Tac Toe by 2Dio" />
+	<meta name="author" content="2Dio Studio | www.2Dio.com" />
 
-	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
 	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' gap://ready file:; style-src * 'self' 'unsafe-inline' 'unsafe-eval'; script-src * 'self' 'unsafe-inline' 'unsafe-eval'; media-src *; img-src * data: 'unsafe-inline'">
+
+	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+
+	<link rel="apple-touch-icon" href="img/icon-iphone.png" />
+
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+	<link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+		<!--<link rel="image_src" href="https://orbity.io/images/orbity-og-graphic.png" />-->
+	<meta property="og:title" content="Super Tic-Tac-Toe | Strategic Online Multiplayer Tic-Tac-Toe!" />
+	<meta property="og:description" content="Play Super Tic-Tac-Toe for free on PC/Desktop, Mobile, iOS &amp; Android. Play against our crafty A.I. challenge your friends and find others to play online!" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="clickerhacker.com/" />
+	<!--<meta property="og:image" content="http://orbity.io/images/orbity-og-graphic.png" />-->
+	<meta property="og:site_name" content="ClickerHacker.com" />
 
 	<link rel="stylesheet" type="text/css" href="css/font-awesome-4.2.0.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
-
-	<link rel="apple-touch-icon" href="img/icon-iphone.png" />
 
 	<script>
 		var dev = true;
@@ -47,6 +63,10 @@
 </head>
 <body onload="onLoad()" onunload="onunload()">
 
+<div id="body_loading" class="loadingdots">Loading</div>
+
+<div id="sbody">
+
 <div id="templates" style="display: none;">
 	<div data-key="play_x">
 		<i class="fa fa-times"></i>
@@ -64,9 +84,9 @@
 				{{turn_out?<span>It's ##turn_out## Turn!</span>}}
 				<span class="gstarted">Started ##start_out## ago</span>
 			</div>
-			<div class="u2">
+			<div class="u2 open_game" data-game_id="##id##">
 				<span>##status_out##</span>
-				<span class="button open_game" data-game_id="##id##">##action_button##</span>
+				<span class="button">##action_button##</span>
 				<span class="gtime">Moves - ##move_num##</span>
 			</div>
 		</div>
@@ -78,8 +98,8 @@
 	<div id="modal">
 		<h1></h1>
 		<div></div>
-		<a id="mbutton1">Ok</a>
-		<a id="mbutton2">Cancel</a>
+		<a id="mbutton1" class="botbuttons fullwidth">Ok</a>
+		<a id="mbutton2" class="botbuttons">Cancel</a>
 	</div>
 	<!--<div id="modal">
 		<h1>Easy A.I. Game</h1>
@@ -153,12 +173,14 @@
 	</div>
 
 	<div id="homepage" class="page show shown show_left" data-on_open="open_homepage">
+		<div class="bg_area"><ul class="circles"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>
+		<div class="bg_slider_container"><div class="bg_slider" style="background-color:#40D0C0;"></div></div>
 		<div class="content">
-			<div class="logo" style="font-size:2.5em; margin-bottom:15px;"><small style="font-size:25pt !important; color:#FFF;">Super <span style="color:#f96145;">#</span></small><br>Tic-Tac-Toe</div>
+			<div class="logo" style="font-size:2.5em; margin-bottom:15px;"><small style="font-size:5vmax !important; color:#FFF;">Super <span style="color:#f96145;">#</span></small><br>Tic-Tac-Toe</div>
 			<a id="AI_1" class="play_game ai button" data-diff="1">Play an Easy A.I.<div class="button"><i class="fa fa-exclamation-circle"></i> Resume</div></a><br />
 			<a id="AI_2" class="play_game ai button" data-diff="2" style="margin-top:10px;">Play a Medium A.I.<div class="button"><i class="fa fa-exclamation-circle"></i> Resume</div></a><br />
 			<a id="AI_3" class="play_game ai button" data-diff="3" style="margin-top:10px;">Play a Hard A.I.<div class="button"><i class="fa fa-exclamation-circle"></i> Resume</div></a>
-			<a id="AI_4" class="play_game ai button" data-diff="4" style="margin-top:10px;">Play a Expert A.I.<div class="button"><i class="fa fa-exclamation-circle"></i> Resume</div></a>
+			<a id="AI_4" class="play_game ai button" data-diff="4" style="margin-top:10px;">Play an Expert A.I.<div class="button"><i class="fa fa-exclamation-circle"></i> Resume</div></a>
 			<!--<p><a class="ai button" diff="0">Or Play Dev AI</a></p>-->
 			<h3>Local Multiplayer</h3>
 			<a id="Local" class="play_game local button">Pass &amp; Play<div class="button"><i class="fa fa-exclamation-circle"></i> Resume</div></a>
@@ -166,9 +188,11 @@
 	</div>
 
 	<div id="online" data-on_open="load_online" data-unload="unload_online" class="page scrollable show_right">
+		<div class="bg_area"><ul class="circles"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>
+		<div class="bg_slider_container"><div class="bg_slider" style="background-color:#0BF; background-image:repeating-linear-gradient(135deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px)"></div></div>
 		<div class="content">
 			<div align="center">
-				<div class="logo" style="font-size:2.5em;"><small style="font-size:25pt !important; color:#FFF;">Super <span style="color:#f96145;">#</span></small><br>Tic-Tac-Toe</div>
+				<div class="logo" style="font-size:2.5em;"><small style="font-size:5vmax !important; color:#FFF;">Super <span style="color:#f96145;">#</span></small><br>Tic-Tac-Toe</div>
 
 				<h3><i class="fa fa-globe"></i> Online Multiplayer</h3>
 				<a id="find_opponent" class="button">Find an opponent</a>
@@ -177,7 +201,7 @@
 				- Or -<br /><br />
 				<input id="play_friend_name" type="text" placeholder="Friend's UserID" style="width:75vw;" /><br />
 				<a id="play_friend" class="button">Play a friend</a><br />
-				<small>Your UserID is: <span class="_username"></span></small><br /><br />
+				<small>Your UserID is: <span class="_username" style="color:#FFF;"></span></small><br /><br />
 				<small style="display:none;">Looking for another player... <i class="fa fa-spinner fa-spin"></i></small>
 			</div>
 
@@ -198,7 +222,9 @@
 		</div>
 	</div>
 
-	<div id="game" class="play_ai page show_left" data-on_open="open_game" data-unload="close_game">
+	<div id="game" class="play_ai page show_bottom" data-on_open="open_game" data-unload="close_game">
+		<div class="bg_area"><ul class="circles"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>
+		<div class="bg_slider_container"><div class="bg_slider" style="background-color:#408ed0; background-image:repeating-linear-gradient(135deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px);"></div></div>
 		<div class="sbar">
 			<div id="pre_choices" style="display:none;">
 				<div id="ai_play">
@@ -212,9 +238,9 @@
 			<i id="game_p1_marker" class="fa fa-times" style="color:#1c86ff; font-size:2em; vertical-align:sub; background-color:#111; padding:0 3px;"></i> <span id="game_p1_name">You</span> <b>vs.</b> <span id="game_p2_name">Easy A.I.</span> <i id="game_p2_marker" class="fa fa-circle-o" style="color:#EA0000; font-size:1.7em; vertical-align:sub; background-color:#111; padding:2px 4px;"></i> <span id="last_ping_time"></span>
 		</div>
 		<div class="ubar">
-			<div><b id="game_player_turn" style="font-size:150%;"></b>'s Turn &nbsp;|&nbsp; Game time: 3 minutes</div>
+			<div><b id="game_player_turn"></b>'s Turn &nbsp;|&nbsp; Game time: 3 minutes</div>
 		</div>
-		<div class="board content" style="width: 100vw; height: 100vw;">
+		<div class="board content" style="width: 100vw; height: 100vw; max-width:calc(100vh - 130px); max-height:calc(100vh - 130px);">
 			<div class="overlay"></div>
 			<div class="cell top left main_grid grid_1" data-grid="1">
 				<div class="board">
@@ -352,7 +378,7 @@
 			<p>Each turn, you mark one of the small squares.</p>
 			<p>When you get three in a row on a small board, you've won that board.</p>
 			<p>To win the game, you need to win three small boards in a row.</p>
-			<p>*IMPORTANT - <b>You don't get to pick which of the nine boards to play on.</b> That's determined by your opponent’s previous move. <b>Whichever square they pick, that's the board you must play in next.</b></p>
+			<p>*IMPORTANT - <b>You don't get to pick which of the nine boards to play on.</b> That's determined by your opponent's previous move. <b>Whichever square they pick, that's the board you must play in next.</b></p>
 			<p><em>(And whichever square you pick will determine which board they play on next.)</em></p>
 			<p>What if my opponent sends me to a board that's already been won? In that case – you get to go anywhere you like, on any of the other boards.</p>
 			<p><em>This means you should avoid sending your opponent to an already-won board!</em></p>
@@ -364,20 +390,26 @@
 	<div id="settings" class="page show_bottom scrollable">
 		<div class="content">
 			<h2 align="center">Settings</h2>
-			<p>Open app directly to the Online tab<input type="checkbox"></p>
-			<p>Disable confirmation when making a move online<input type="checkbox" checked="checked"></p>
-			<h3 align="center">Change board animations</h3>
-			<p>Zoom (default)<input type="checkbox" checked="checked"></p>
-			<p>Spin<input type="checkbox"></p>
-			<p>Fade<input type="checkbox"></p>
-			<p>Slide<input type="checkbox"></p>
+			<div style="float:left; width:50%;">
+				<p>Music<input type="checkbox" class="setting" data-func="audio_update" id="settings_music"><small><a style="text-decoration:none; color:green;" href="http://www.bensound.com/" target="_blank">Music by Bensound.com</a></small></p>
+				<p>Sound Effects<input type="checkbox" class="setting" data-func="audio_update" id="settings_effects"></p>
+				<!--<p>Open app directly to the Online tab<input type="checkbox" class="setting" id="settings_open_online"></p>
+				<p>Confirm when making a move online<input type="checkbox" class="setting" id="settings_confirm_move"></p>-->
+			</div>
+			<div style="float:right; width:50%;">
+				<h3 align="center">Board Animations</h3>
+				<p>Zoom<input type="radio" name="settings_animation" class="setting" data-func="animation_update" value="zoom" checked="checked"></p>
+				<p>Spin<input type="radio" name="settings_animation" class="setting" data-func="animation_update" value="spin"></p>
+				<p>Fade<input type="radio" name="settings_animation" class="setting" data-func="animation_update" value="fade"></p>
+			</div>
+			<div class="clear"></div>
 		</div>
 	</div>
 
 	<div id="profile" class="page show_bottom scrollable">
 		<div class="content">
 			<h2>Profile</h2>
-			<p>Username: <span class="_username"></span> <i class="fa fa-pencil change_name"></i></p>
+			<p>UserID: <span class="_username"></span> <i class="fa fa-pencil change_name"></i></p>
 			<p>Wins: <span class="_win"></span></p>
 			<p>Losses: <span class="_loss"></span></p>
 			<p>Draws: <span class="_draw"></span></p>
@@ -386,7 +418,7 @@
 
 	<div id="upgrade" class="page show_bottom">
 		<div class="content">
-			<div class="logo" style="font-size:2.5em;"><small style="font-size:25pt !important; color:#FFF;">Super <span style="color:#f96145;">#</span></small><br>Tic-Tac-Toe</div>
+			<div class="logo" style="font-size:2.5em;"><small style="font-size:5vmax !important; color:#FFF;">Super <span style="color:#f96145;">#</span></small><br>Tic-Tac-Toe</div>
 			<h2>Upgrade!</h2>
 			<p>One time upgrade for only $4.99 &amp; get the perks below!</p>
 			<p>+ Remove all advertising</p>
@@ -417,6 +449,8 @@
 			<p>Total online games played: <span id="stat_online"></span></p>
 		</div>
 	</div>
+</div>
+
 </div>
 
 </body>

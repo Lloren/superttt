@@ -8,13 +8,15 @@ function audio(){
 	window.AudioContext = window.AudioContext || window.webkitAudioContext;
 	
 	this.play_audio = !!window.AudioContext;
+	this.running_music = false;
+	this.running_music_name = false;
 	
 	if (this.play_audio){
 		this.context = new AudioContext();
 		this.channels = {};
 		this.channels["main"] = this.context.createGain();
 		this.channels["main"].connect(this.context.destination);
-		this.channels["main"].gain.value = 0.2;
+		this.channels["main"].gain.value = 0.25;
 		
 		this.channels["controls"] = this.context.createGain();
 		this.channels["controls"].playing = [];
@@ -34,12 +36,12 @@ function audio(){
 		this.channels["effects_quiet"] = this.context.createGain();
 		this.channels["effects_quiet"].playing = [];
 		this.channels["effects_quiet"].connect(this.channels['effects']);
-		this.channels["effects_quiet"].gain.value = 0.1;
+		this.channels["effects_quiet"].gain.value = 0.5;
 		
 		this.channels["music"] = this.context.createGain();
 		this.channels["music"].playing = [];
 		this.channels["music"].connect(this.channels['main']);
-		this.channels["music"].gain.value = 0.10;
+		this.channels["music"].gain.value = 0.5;
 		
 		this.channels["music1"] = this.context.createGain();
 		this.channels["music1"].playing = [];
@@ -159,5 +161,83 @@ function audio(){
 		source.start(0, start);
 		return source;
 	};
+	
+	this.update_music = function (audio, rand, retry, callback){
+		console.log("Update Music", audio);
+		if (!this.play_audio || (this.running_music && audio == this.running_music_name))
+			return;
+		if (typeof rand == "undefined")
+			rand = true;
+		if (typeof retry == "undefined")
+			retry = true;
+		var cur_channel = false;
+		var new_channel = false;
+		if (!this.channels['music1'].playing.length){
+			cur_channel = this.channels['music2'];
+			new_channel = this.channels['music1'];
+		} else if (!this.channels['music2'].playing.length){
+			cur_channel = this.channels['music1'];
+			new_channel = this.channels['music2'];
+		}
+		if (this.running_music){
+			this.fade(cur_channel.gain, 0, 2000, function (){
+				for (var i=0;i<cur_channel.playing.length;i++){
+					cur_channel.playing[i].disconnect(cur_channel);
+				}
+				cur_channel.playing = [];
+			});
+		}
+		if (new_channel){
+			this.running_music_name = audio;
+			new_channel.gain.value = 0;
+			var audio_handle = this.play_sound(audio, "none", rand, rand);
+			if (audio_handle.buffer)
+				$("#music_name").html(audio_handle.buffer.url_loc.split("/").pop().split("-")[1].slice(0, -4));
+			audio_handle.connect(new_channel);
+			this.running_music = audio_handle;
+			new_channel.playing.push(audio_handle);
+			if (rand){
+				this.fade(new_channel.gain, 1, 2000, function (){
+				
+				});
+			} else {
+				new_channel.gain.value = 1;
+			}
+			if (callback)
+				callback(audio_handle);
+		} else if (retry){
+			setTimeout(function (){
+				Audio.update_music(audio, rand, retry, callback);
+			}, 100);
+		}
+	};
+	
+	this.playlist_index = -1;
+	this.playlist_songs = [];
+	this.playlist_rand = false;
+	this.set_playlist = function(songs, rand){
+		this.playlist_rand = rand || false;
+		this.playlist_index = -1;
+		this.playlist_songs = songs;
+		this.next_playlist();
+	};
+	
+	this.next_playlist = function(){
+		var key = -1;
+		if (this.playlist_rand){
+			do{
+				key = Math.floor(Math.random()*this.playlist_songs.length);
+			} while(key == this.playlist_index);
+		} else {
+			this.playlist_index = this.playlist_index + 1;
+			if (this.playlist_index >= this.playlist_songs.length)
+				this.playlist_index = 0;
+		}
+		this.update_music(this.playlist_songs[this.playlist_index], false, true, function (audio_handle){
+			audio_handle.addEventListener('ended', () => {
+				Audio.next_playlist();
+			})
+		});
+	}
 }
 var Audio = new audio();

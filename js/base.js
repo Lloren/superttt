@@ -50,7 +50,7 @@ function Settings(save_key, def_data){
 		}
 	};
 }
-window.settings = new Settings(false, "{}");
+window.settings = new Settings(false, '{music: true, sound_effects: true, animation: "zoom"}');
 
 function Stats(){
 	var scope = this;
@@ -266,7 +266,7 @@ function open_modala(text, dismiss, time){
 	dismiss = dismiss || false;
 	time = time || 10000;
 	$("#modal h1").html(text);
-	$("#modal").addClass("loading").css("display", "table");
+	$("#modal").addClass("loading").css("display", "block");
 	$("#modal-overlay").off().addClass("enabled");
 	modala_handle = setTimeout(function (){
 		close_modala();

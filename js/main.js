@@ -26,6 +26,11 @@ function show_page(key, onload){
 	if (over){
 		$("[data-onpage='overlay']").addClass("active");
 	}
+	/*if (page.hasClass("show_left")){
+		Audio.play_sound("button_slide_back", "controls");
+	} else {
+		Audio.play_sound("button_slide_forward", "controls");
+	}*/
 	var pover = prev.hasClass("show_bottom");
 	if (prev.attr("id") != page.attr("id")){
 		prev.addClass("hiding");
@@ -40,7 +45,7 @@ function show_page(key, onload){
 			} else {
 				prev.removeClass("hiding show shown");
 			}
-		}, 500);
+		}, 250);
 		if (prev.data("unload")){
 			window[prev.data("unload")]();
 		}
@@ -52,11 +57,13 @@ function show_page(key, onload){
 function open_menu(){
 	$("#nav").addClass("open");
 	$("#nav-overlay").addClass("enabled");
+	//Audio.play_sound("button_slide_forward", "controls");
 }
 
 function close_menu(){
 	$("#nav").removeClass("open");
 	$("#nav-overlay").removeClass("enabled");
+	//Audio.play_sound("button_slide_back", "controls");
 }
 
 var leaving_message = false;
@@ -191,6 +198,7 @@ function open_homepage(){
 }
 
 function open_game(){
+	Audio.play_sound("button_slide_forward", "controls");
 	var type = "";
 	var other = "";
 	var leave_page = "homepage";
@@ -211,7 +219,7 @@ function open_game(){
 	$("#game .show").removeClass("show");
 	$("#game .board .fa").remove();
 	$("#game .highlight").removeClass("highlight");
-	$("#game_p1_name").html("you");
+	$("#game_p1_name").html("You");
 	$("#game_p2_name").html(type);
 	$("#game_p1_marker").removeClass(char_lookup["o"]).addClass(char_lookup["x"]);
 	$("#game_p2_marker").removeClass(char_lookup["x"]).addClass(char_lookup["o"]);
@@ -226,7 +234,7 @@ function open_game(){
 			player_num = data.player_num;
 			other_num = data.ai_num;*/
 			if (data.player_num != 0){
-				$("#game_p1_name").html("you");
+				$("#game_p1_name").html("You");
 			} else {
 				$("#game_p1_name").html(data.username);
 			}
@@ -248,13 +256,15 @@ function open_game(){
 }
 
 function close_game(){
+	$(".prev_last_play").removeClass("prev_last_play");
+	$(".last_play").removeClass("last_play");
 	clearTimeout(game_check_timeout);
 	game_check_timeout = false;
 }
 
 function build_game(type){
 	if (start_message){
-		open_modal({content: '<div class="gameselectbuttons"><a class="button">Play as X</a><a class="button">Play as O</a></div>', title: type+" Game", button1: false, callback: function (button){
+		open_modal({content: '<div class="gameselectbuttons"><a class="button">Play as <i class="fa fa-times" style="color:#1c86ff; font-size:3vmax; vertical-align:sub;"></i></a><a class="button">Play as <i class="fa fa-circle-o" style="color:#EA0000; font-size:3vmax; vertical-align:sub;"></i></a></div>', title: type+" Game", button1: false, callback: function (button){
 			if (button == "Play as O"){
 				swap_players();
 			}
@@ -315,7 +325,7 @@ function process_turn(data){
 	}
 	if (data.game_complete){
 		$(".expand").removeClass("expand");
-		$(".board.content > .overlay").addClass("show").html("<div>Game Complete.<br />"+(data.type==3?"Cats Game!":disp_char.toUpperCase()+" Wins!</div>"));
+		$(".board.content > .overlay").addClass("show gcomplete").html("<div>Game Complete.<br />"+(data.type==3?"Cats Game!":disp_char.toUpperCase()+" Wins!</div>"));
 
 		save_game(true);
 
@@ -324,9 +334,9 @@ function process_turn(data){
 			title = 'Cats Game!';
 		} else if (data.type == player_num){
 			Audio.play_sound("game_win", "controls");
-			title = '<i class="fa '+char_lookup[player_char]+'" style="color:#1c86ff;"></i> You Win!';
+			title = '<i class="fa '+char_lookup[player_char]+'" style="color:#1cff39;"></i> You Won!';
 		} else {
-			title = '<i class="fa '+char_lookup[player_char]+'" style="color:#ff3d1c;"></i> You Lost :-(';
+			title = '<i class="fa '+char_lookup[player_char]+'" style="color:#ff3d1c;"></i> You Lost :(';
 		}
 		open_modal({content: '<div class="gameselectbuttons"><div>Options</div><a class="button">Play Again</a><a class="button">Review Board</a><a class="button">End Game</a></div>', title: title, button1: false, callback: function (button){
 			if (button == "Play Again"){//TODO, online needs more checks
@@ -336,7 +346,7 @@ function process_turn(data){
 					start_game(game_type, game_ai?game_ai.level:false);
 				}
 			} else if (button == "End Game"){
-				open_homepage();
+				show_page("homepage");
 			}
 		}});
 	} else {
@@ -472,11 +482,11 @@ function check_user(){
 		if (data.user_id){
 			settings.set("user_id", data.user_id);
 			settings.set("username", data.name);
-			stats.set("online_games", data.loss*1+data.draw*1+data.win*1);
+			stats.set("online_games", data.losses*1+data.draws*1+data.wins*1);
 			$("._username").html(data.name);
-			$("._win").html(data.win);
-			$("._loss").html(data.loss);
-			$("._draw").html(data.draw);
+			$("._win").html(data.wins);
+			$("._loss").html(data.losses);
+			$("._draw").html(data.draws);
 		}
 	});
 }
@@ -530,6 +540,41 @@ async function timeout(ms) {
 	return await new Promise(resolve => setTimeout(resolve, ms));
 }
 
+var music_load_count = 0;
+function music_load(){
+	music_load_count++;
+	return music_load_callback;
+}
+
+function music_load_callback(){
+	music_load_count--;
+	if (music_load_count <= 0){
+		Audio.set_playlist(["music1", "music2", "music3"]);
+	}
+}
+
+function audio_update(){
+	if (settings.get("music")){
+		Audio.set_volume(0.5, "music");
+	} else {
+		Audio.set_volume(0, "music");
+	}
+	if (settings.get("effects")){
+		Audio.set_volume(1, "effects");
+		Audio.set_volume(1, "controls");
+	} else {
+		Audio.set_volume(0, "effects");
+		Audio.set_volume(0, "controls");
+	}
+}
+
+function animation_update(){
+	$("#game").removeClass("spin fade");
+	var anim = settings.get("animation");
+	if (anim != "zoom")
+		$("#game").addClass(anim);
+}
+
 function startup(){
 	console.log("start startup");
 	if (has_internet){
@@ -543,17 +588,19 @@ function startup(){
 			check_user();
 		}
 	}
-	
-	Audio.load_sound("audio/music/bensound-acousticbreeze.mp3", "music1");
-	Audio.load_sound("audio/music/bensound-cute.mp3", "music2");
-	Audio.load_sound("audio/music/bensound-sunny.mp3", "music3");
-	Audio.load_sound("audio/music/bensound-tenderness.mp3", "music4");
-	Audio.load_sound("audio/music/bensound-ukulele.mp3", "music5");
-	
+
+	Audio.load_sound("audio/music/bensound-ukulele.mp3", "music1", false, music_load());
+	Audio.load_sound("audio/music/bensound-cute.mp3", "music2", false, music_load());
+	Audio.load_sound("audio/music/bensound-sunny.mp3", "music3", false, music_load());
+	/*Audio.load_sound("audio/music/bensound-tenderness.mp3", "music4");
+	Audio.load_sound("audio/music/bensound-acousticbreeze.mp3", "music5");*/
 	
 	Audio.load_sound("audio/sfx/button_back.mp3", "button_back");
 	Audio.load_sound("audio/sfx/button_click.mp3", "button_click");
 	Audio.load_sound("audio/sfx/game_click.mp3", "game_click");
+	Audio.load_sound("audio/sfx/button_slide_back.mp3", "button_slide_back");
+	Audio.load_sound("audio/sfx/button_slide_forward.mp3", "button_slide_forward");
+	Audio.load_sound("audio/sfx/button_tap.mp3", "button_tap");
 	Audio.load_sound("audio/sfx/game_lose_square.mp3", "game_lose_square");
 	Audio.load_sound("audio/sfx/game_win.mp3", "game_win");
 	Audio.load_sound("audio/sfx/game_win_square.mp3", "game_win_square");
@@ -585,8 +632,14 @@ function startup(){
 				data.platform = device_info().platform;
 				var push_info = JSON.stringify(data);
 				if (window.localStorage.getItem("push_info") != push_info){
-					make_call("/ajax/push.php?action=subscribe", {push_info: push_info}, false, {type: "post"});
-					window.localStorage.setItem("push_info", push_info);
+					make_call("/ajax/push.php?action=subscribe", {push_info: push_info}, function (data){
+						console.log(data);
+						if (data){
+							window.localStorage.setItem("push_info", push_info);
+						} else {
+							push_enabled = false;
+						}
+					}, {type: "post"});
 				}
 			}
 		});
@@ -637,17 +690,15 @@ function startup(){
 	$(document).on("mouseup touchend", function (e){//"not touched" event
 		if (!main_grid_touched && $(".board.highlight").length && !e.target.matches(".board.highlight")){
 			$(".board.highlight").removeClass("highlight");
-			Audio.play_sound("button_back", "controls");
+			Audio.play_sound("button_slide_back", "controls");
 		}
 	});
 	
 	click_event("#menubutton", function (e){
-		Audio.play_sound("button_click", "controls");
 		open_menu();
 	});
 
 	click_event("#nav-overlay", function (e){
-		Audio.play_sound("button_back", "controls");
 		close_menu();
 	}, false, true);
 
@@ -674,10 +725,11 @@ function startup(){
 		console.log("main_grid");
 		var board = $(this).children(".board");
 		if (!board.hasClass("highlight") && !board.children(".overlay").hasClass("show")){
+			$(".board.highlight").removeClass("highlight");
 			main_grid_touched = true;
 			setTimeout(function (){main_grid_touched = false;}, 200);
 			board.addClass("highlight");
-			Audio.play_sound("game_click", "controls");
+			Audio.play_sound("button_slide_forward", "controls");
 		}
 	});
 
@@ -756,22 +808,25 @@ function startup(){
 	
 	click_event("#closebutton", function (e){
 		if ($(".page.show_bottom:visible")){
-			Audio.play_sound("button_back", "controls");
+			Audio.play_sound("button_slide_back", "controls");
 			show_page($(".page:not(.show_bottom):visible").attr("id"));
 		}
 	});
 
 	click_event(".open_game", function (e){
+		Audio.play_sound("button_tap", "controls");
 		start_game("online", $(this).data("game_id"));
 	}, true);
 	
 	$("#play_friend_name").on("keyup", function (e){
+		Audio.play_sound("button_tap", "controls");
 		console.log(e);
 		if (e.which == 13){
 			$("#play_friend").trigger("click_event");
 		}
 	});
 	click_event("#play_friend", function (e){
+		Audio.play_sound("button_tap", "controls");
 		open_modala("Searching...", true);
 		make_call("/ajax/queue_call.php", {action: "friend", name: $("#play_friend_name").val()}, function (data){
 			close_modala();
@@ -782,7 +837,8 @@ function startup(){
 	});
 	
 	click_event("#find_opponent", function (e){
-		make_call(base_url+"/ajax/queue_call.php", {action: "enter"}, function (data){
+		Audio.play_sound("button_tap", "controls");
+		make_call("/ajax/queue_call.php", {action: "enter"}, function (data){
 			if (data.game_id){
 				start_game("online", data.game_id);
 			} else {
@@ -794,6 +850,7 @@ function startup(){
 	});
 
 	click_event("#leave_queue", function (e){
+		Audio.play_sound("button_tap", "controls");
 		make_call("/ajax/queue_call.php", {action: "leave", queue_id:settings.get("queue_id")}, function (data){
 			if (data.leave){
 				settings.delete("queue_id");
@@ -804,7 +861,8 @@ function startup(){
 	});
 
 	click_event(".change_name", function (e){
-		open_modal({title: "Change Display Name", content: '<small>If you change you username you will lose access to it and someone else can take it.</small><input type="text" id="changed_name" value="'+settings.get("username")+'" />', callback: function (button){
+		Audio.play_sound("button_tap", "controls");
+		open_modal({title: "Change UserID", content: '<small>When you change your UserID you will lose access to it and someone else can take it.</small><input type="text" id="changed_name" value="'+settings.get("username")+'" />', callback: function (button){
 			if (button == "Ok"){
 				make_call("/ajax/settings.php", {action: "username", username: $("#changed_name").val()}, function (data){
 					settings.set("username", data.name);
@@ -830,6 +888,7 @@ function startup(){
 	}, false);
 
 	click_event(".open_page", function (e){
+		Audio.play_sound("button_slide_forward", "controls");
 		$("#nav-overlay").trigger("click_event");
 		if ($(e.currentTarget).data("check")){
 			if (!window[$(e.currentTarget).data("check")]())
@@ -841,7 +900,37 @@ function startup(){
 			show_page($(e.currentTarget).data("page"));
 		}
 	}, true, true);
+	
+	$(".setting").each(function(){
+		var id = $(this).attr("id");
+		if (id){
+			var obj = id.replace(/settings_/g, "");
+			$("#settings_"+obj).prop("checked", settings.get(obj));
+		} else if ($(this).attr("type") == "radio"){
+			var obj = $(this).attr("name").replace(/settings_/g, "");
+			$("input:radio[name=settings_"+obj+"]").val([settings.get(obj)]);
+		}
+		if ($(this).data("func")){
+			window[$(this).data("func")]();
+		}
+	}).on("change", function (){
+		var id = $(this).attr("id");
+		if (id){
+			var obj = id.replace(/settings_/g, "");
+			settings.set(obj, $(this).prop("checked"));
+		} else if ($(this).attr("type") == "radio"){
+			var obj = $(this).attr("name").replace(/settings_/g, "");
+			settings.set(obj, $(this).val());
+		}
+		if ($(this).data("func")){
+			window[$(this).data("func")]();
+		}
+	});
 
 	open_homepage();
 	console.log("complete startup");
+	
+	
+	$("#body_loading").hide();
+	$("#sbody").fadeIn(1500);
 }
