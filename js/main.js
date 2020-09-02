@@ -681,12 +681,14 @@ function startup(){
 	
 	var was_music = false;
 	document.addEventListener("pause", function (e){
+		console.log("pause", Audio.channels["music"].gain.value);
 		if (Audio.channels["music"].gain.value){
 			was_music = true;
 			Audio.set_volume(0);
 		}
 	}, false);
 	document.addEventListener("resume", function (e){
+		console.log("resume", was_music, last_push_game);
 		if (was_music){
 			was_music = false;
 			Audio.set_volume(0.25);
