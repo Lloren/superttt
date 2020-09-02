@@ -153,17 +153,17 @@
 		<ul>
 			<li><i class="fa fa-user"></i> User</li>
 			<!--<li class="open_page" data-page="profile"><i class="fa fa-user"></i> My profile</li>-->
-			<li class="open_page" data-page="upgrade"><i class="fa fa-thumbs-o-up"></i> Remove Ads!<span style="position:relative; top:-2px; margin:0 20px; font-size:0.7em; display:none;">- or -</span><span style="position:relative; top:-1px; font-size:0.8em; display:none;">Restore</span></li>
-			<li class="has_paid do_restore" style="display: none;"><i class="fa fa-thumbs-o-up"></i> Thank you for your support!<small class="online_ad_supported ads_disabled drawerings">Upgrades enabled!</small></li>
+			<li class="open_page" data-page="appstats"><i class="fa fa-bar-chart"></i> App Statistics</li>
+			<li class="open_page remove_paid" data-page="upgrade"><i class="fa fa-thumbs-o-up"></i> Upgrade <small style="font-size:small; font-style:initial;">| Remove Ads!</small></li>
+			<li class="has_paid do_restore" style="display: none; font-size:12px;"><i class="fa fa-heart-o"></i> Thank you for your support!<small class="online_ad_supported ads_disabled">Upgrades enabled!</small></li>
 		</ul>
 		<ul>
 			<li><i class="fa fa-info-circle"></i> More</li>
 			<li class="rate_apple outbound" data-url="https://itunes.apple.com/us/app/apple-store/id961837319?mt=8"><i class="fa fa-heart-o"></i> Rate the App <i class="fa fa-apple"></i></li>
-			<li class="rate_android outbound" data-url="https://play.google.com/store/apps/details?id=com.twodio.drawerings"><i class="fa fa-android"></i> Rate the App <i class="fa fa-heart-o"></i></li>
+			<li class="rate_android outbound" data-url="https://play.google.com/store/apps/details?id=com.twodio.superttt"><i class="fa fa-android"></i> Rate the App <i class="fa fa-heart-o"></i></li>
 			<li class="outbound about" data-url="http://www.2dio.com"><i class="fa fa-code"></i> About us .:. 2Dio.com</li>
-			<li class="outbound fb" data-url="https://www.facebook.com/Drawerings/"><i class="fa fa-facebook"></i> Like us on Facebook <i class="fa fa-heart"></i></li>
+			<li class="outbound fb" data-url="https://www.facebook.com/SuperTTT/"><i class="fa fa-facebook"></i> Like us on Facebook</li>
 			<li class="open_page" data-page="contact"><i class="fa fa-comments-o"></i> Send us a message!</li>
-			<li class="open_page" data-page="appstats"><i class="fa fa-bar-chart"></i> App Statistics</li>
 			<li class="twolines"><i class="fa fa-desktop"></i> For a Desktop version of SuperTTT<br />visit www.SuperTTT.com on PC!</li>
 		</ul>
 		<ul>
@@ -200,16 +200,18 @@
 				<small style="display:none;">Currently <span id="player_num" style="font-size:1.4em;">0</span> players in queue</small><br />
 				- Or -<br /><br />
 				<input id="play_friend_name" type="text" placeholder="Friend's UserID" style="width:75vw;" /><br />
-				<a id="play_friend" class="button">Play a friend</a><br />
+				<a id="play_friend" class="button" style="border-top:none;">Play a friend</a><br />
 				<small>Your UserID is: <span class="_username" style="color:#FFF;"></span></small><br /><br />
 				<small style="display:none;">Looking for another player... <i class="fa fa-spinner fa-spin"></i></small>
 			</div>
 
+			<h3 style="background-color:rgba(130, 130, 130, 0.5);margin:0;padding: 5px 20px;width: 22vmax;position: relative;left: 50%;transform: translateX(-50%);border-radius: 5px 5px 0 0;font-size: 2vmax;">Your games</h3>
 			<div class="list_game rgth">
 				<div class="u1"><strong>Players</strong></div>
 				<div class="u2"><strong>Game</strong></div>
 			</div>
 			<div id="your_games">
+				<div class="list_game loading">No Games...</div>
 			</div>
 
 			<h3>Recent global games</h3>
@@ -218,6 +220,7 @@
 				<div class="u2"><strong>Game</strong></div>
 			</div>
 			<div id="global_games">
+				<div class="list_game loading">Loading...</div>
 			</div>
 		</div>
 	</div>
@@ -235,10 +238,10 @@
 					<input type="button" value="play as O" />
 				</div>
 			</div>
-			<i id="game_p1_marker" class="fa fa-times" style="color:#1c86ff; font-size:2em; vertical-align:sub; background-color:#111; padding:0 3px;"></i> <span id="game_p1_name">You</span> <b>vs.</b> <span id="game_p2_name">Easy A.I.</span> <i id="game_p2_marker" class="fa fa-circle-o" style="color:#EA0000; font-size:1.7em; vertical-align:sub; background-color:#111; padding:2px 4px;"></i> <span id="last_ping_time"></span>
+			<i id="game_p1_marker" class="fa fa-times" style="color:#1c86ff; font-size:2em; vertical-align:sub; background-color:#111; padding:0 3px; border-radius:0.2em;"></i> <span id="game_p1_name">You</span> <b>vs.</b> <span id="game_p2_name">Easy A.I.</span> <i id="game_p2_marker" class="fa fa-circle-o" style="color:#EA0000; font-size:1.7em; vertical-align:sub; background-color:#111; padding:2px 4px; border-radius:0.2em;"></i> <span id="last_ping_time"></span>
 		</div>
 		<div class="ubar">
-			<div><b id="game_player_turn"></b>'s Turn &nbsp;|&nbsp; Game time: 3 minutes</div>
+			<div><b id="game_player_turn"></b>'s Turn</div>
 		</div>
 		<div class="board content" style="width: 100vw; height: 100vw; max-width:calc(100vh - 130px); max-height:calc(100vh - 130px);">
 			<div class="overlay"></div>
@@ -426,9 +429,10 @@
 			<div class="logo" style="font-size:2.5em;"><small style="font-size:5vmax !important; color:#FFF;">Super <span style="color:#f96145;">#</span></small><br>Tic-Tac-Toe</div>
 			<h2>Upgrade!</h2>
 			<p>One time upgrade for only $4.99 &amp; get the perks below!</p>
-			<p>+ Remove all advertising</p>
+			<p>+ Unlock Expert A.I.</p>
 			<p>+ Play up to 10 simultaneous online matches</p>
-			<a class="button">Upgrade!</a>
+			<p>+ Remove all advertising</p>
+			<a class="button">Upgrade <small>| Restore</small></a>
 			<p style="font-size:65%;">Thanks for supporting our small dev studio! <span class="fa fa-heart-o" style="color:#FFF;"></span></p>
 		</div>
 	</div>

@@ -203,16 +203,21 @@ function open_game(){
 	var other = "";
 	var leave_page = "homepage";
 	console.log(game_type);
+	$("#game").removeClass("playing_online playing_local");
 	if (game_type == "ai"){
 		type = ai_types[game_ai.level]+" A.I.";
 		other = type;
+		user_turn = true;
 	} else if (game_type == "local"){
 		type = "Local";
 		other = "Them";
+		user_turn = true;
+		$("#game").addClass("playing_local");
 	} else if (game_type == "online"){
 		leave_page = "online";
 		type = "Online";
-		other = "Them"
+		other = "Them";
+		$("#game").addClass("playing_online");
 	}
 	$("#rleavebutton").data("page", leave_page);
 	
@@ -283,9 +288,8 @@ function build_game(type){
 	}
 	
 	if (game.last_move){
-	
-	} else {
 		process_turn(game.last_move);
+	} else {
 	}
 
 	var playable = game.get_playable();
@@ -677,17 +681,15 @@ function startup(){
 	
 	var was_music = false;
 	document.addEventListener("pause", function (e){
-		console.log("pause", Audio.channels["music"].gain.value);
 		if (Audio.channels["music"].gain.value){
 			was_music = true;
-			Audio.set_volume("music", 0);
+			Audio.set_volume(0);
 		}
 	}, false);
 	document.addEventListener("resume", function (e){
-		console.log("resume", was_music, last_push_game);
 		if (was_music){
 			was_music = false;
-			Audio.set_volume("music", 0.5);
+			Audio.set_volume(0.25);
 		}
 		if (last_push_game){
 			start_game("online", last_push_game);
@@ -737,7 +739,7 @@ function startup(){
 	click_event(".main_grid", function (e){
 		console.log("main_grid");
 		var board = $(this).children(".board");
-		if (!board.hasClass("highlight") && !board.children(".overlay").hasClass("show")){
+		if (user_turn && !board.hasClass("highlight") && !board.children(".overlay").hasClass("show")){
 			$(".board.highlight").removeClass("highlight");
 			main_grid_touched = true;
 			setTimeout(function (){main_grid_touched = false;}, 200);
