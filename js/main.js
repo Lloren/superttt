@@ -238,8 +238,11 @@ function open_game(){
 			other_player_char = data.other_player_char;
 			player_num = data.player_num;
 			other_num = data.ai_num;*/
+			user_turn = data.your_turn == "1";
 			if (data.player_num != 0){
 				$("#game_p1_name").html("You");
+				if (!user_turn)
+					set_user_turn(false);
 			} else {
 				$("#game_p1_name").html(data.username);
 			}
@@ -247,7 +250,6 @@ function open_game(){
 			if (data.player_num == 2){
 				swap_players();
 			}
-			user_turn = data.your_turn == "1";
 			console.log("your turn", user_turn);
 			if (!push_enabled && !user_turn){
 				game_check_timeout = setTimeout(function () { check_status(); }, 5000);
@@ -269,8 +271,8 @@ function close_game(){
 
 function build_game(type){
 	if (start_message){
-		open_modal({content: '<div class="gameselectbuttons"><a class="button">Play as <i class="fa fa-times" style="color:#1c86ff; font-size:3vmax; vertical-align:sub;"></i></a><a class="button">Play as <i class="fa fa-circle-o" style="color:#EA0000; font-size:3vmax; vertical-align:sub;"></i></a></div>', title: type+" Game", button1: false, callback: function (button){
-			if (button == "Play as O"){
+		open_modal({content: '<div class="gameselectbuttons"><a class="button">Play as <i class="fa fa-times" style="color:#1c86ff; font-size:3vmax; vertical-align:sub;"></i></a><a class="button" data-swap="true">Play as <i class="fa fa-circle-o" style="color:#EA0000; font-size:3vmax; vertical-align:sub;"></i></a></div>', title: type+" Game", button1: false, callback: function (button){
+			if (button.data("swap")){
 				swap_players();
 			}
 		}});
@@ -293,7 +295,7 @@ function build_game(type){
 	}
 
 	var playable = game.get_playable();
-	console.log(playable);
+	//console.log(playable);
 	$(".main_grid .overlay").addClass("show");
 	for (var grid in playable){
 		$(".main_grid.grid_"+playable[grid]+" .overlay").removeClass("show");
@@ -370,7 +372,7 @@ function set_user_turn(active){
 		$("#last_ping_time").val("");
 	} else {
 		$(".board.content > .overlay").addClass("show").html("<div>Waiting for turn...</div>");
-		if (game_online)
+		if (game_online && !push_enabled)
 			game_check_timeout = setTimeout(function () { check_status(); }, 5000);
 	}
 	save_game();

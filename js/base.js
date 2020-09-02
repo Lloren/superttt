@@ -250,7 +250,7 @@ function open_modal(options){
 			$("#modal").hide();
 			$("#modal-overlay").removeClass("enabled");
 			if (options.callback)
-				options.callback($(this).html());
+				options.callback($(this));
 		}
 	});
 	$("#modal").attr("class", options.add_class).show();
