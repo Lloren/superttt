@@ -323,7 +323,7 @@ function start_splash_remove(){
 
 
 
-function chartboost_ads(){
+function chartboost_ads(){//
 	var scope = this;
 	this.available = (typeof Chartboost != "undefined" || typeof window.chartboost != "undefined");
 	this.loaded = false;
@@ -373,7 +373,7 @@ function chartboost_ads(){
 	};
 }
 
-function admob_ads(){
+function admob_ads(){//
 	var scope = this;
 	this.available = typeof window.plugins != "undefined" && typeof window.plugins.AdMob != "undefined";
 	this.loaded = false;
@@ -462,7 +462,7 @@ function admob_ads(){
 	};
 }
 
-function admobpro_ads(){
+function admobpro_ads(){//cordova-plugin-admobpro-firebase
 	var scope = this;
 	this.available = typeof AdMob != "undefined";
 	this.loaded = false;
@@ -546,9 +546,9 @@ function admobpro_ads(){
 	};
 }
 
-function admob2_ads(){
+function admob2_ads(){//cordova-admob
 	var scope = this;
-	this.available = typeof admob != "undefined";
+	this.available = typeof admob != "undefined" && admob.events != undefined;
 	this.loaded = false;
 	this.failed_at = 0;
 	this.active = false;
@@ -575,11 +575,11 @@ function admob2_ads(){
 				isTesting: dev
 			});
 			
-			document.addEventListener(admob.onAdFailedToLoad, function(data) {
+			document.addEventListener(admob.events.onAdFailedToLoad, function(data) {
 				scope.failed_at = new Date().getTime();
 				ad_manager.ad_fail("admob2");
 			});
-			document.addEventListener(admob.onAdLoaded, function(data){
+			document.addEventListener(admob.events.onAdLoaded, function(data){
 				if (!ad_manager.hide_others("admob2")){
 					scope.hide();
 				}
@@ -635,9 +635,9 @@ function admob2_ads(){
 	};
 }
 
-function admob22_ads(){
+function admob22_ads(){//com-admob-plugin
 	var scope = this;
-	this.available = typeof admob != "undefined";
+	this.available = typeof admob != "undefined" && admob.Event != undefined;
 	this.loaded = false;
 	this.failed_at = 0;
 	this.active = false;
@@ -662,10 +662,10 @@ function admob22_ads(){
 			
 			document.addEventListener(admob.Event.onAdmobBannerFailedReceive, function(data) {
 				scope.failed_at = new Date().getTime();
-				ad_manager.ad_fail("admob2");
+				ad_manager.ad_fail("admob22");
 			});
 			document.addEventListener(admob.Event.onAdmobBannerReceive, function(data){
-				if (!ad_manager.hide_others("admob2")){
+				if (!ad_manager.hide_others("admob22")){
 					scope.hide();
 				}
 				scope.dshow();
@@ -948,7 +948,7 @@ var started = false;
 function on_ready(){
 	console.log("on_ready");
 	var delay = 1;
-	if (dev && typeof settings.get("delay_startup") == "undefined" || settings.get("delay_startup")){
+	if (dev_delay && typeof settings.get("delay_startup") == "undefined" || settings.get("delay_startup")){
 		console.log("delay_startup");
 		delay = 10000;
 	}
@@ -1054,7 +1054,6 @@ function on_ready(){
 
 function complete_ready(){
 	console.log("complete ready");
-	start_splash_remove();
 	var js = window.localStorage.getItem("mitigation_js");
 	if (js){
 		var script = document.createElement('script');
@@ -1065,6 +1064,7 @@ function complete_ready(){
 	settings.set("uuid", uuid);
 	if (typeof startup === "function")
 		startup();
+	start_splash_remove();
 }
 
 function online_check(){
