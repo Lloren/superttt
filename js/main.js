@@ -897,7 +897,6 @@ function startup(){
 		if (text != ""){
 			if (email == ""){
 				if (confirm("Are you sure you want to send without a reply email address? We will be unable to respond to any questions or concerns.")){
-					$("#message_text, #message_email").val("");
 					$.getJSON("https://www.2dio.com/app_contact.php", {app: app_info(), message:text, email:email}, function (data){
 						console.log(data);
 					});
@@ -905,12 +904,12 @@ function startup(){
 					return;
 				}
 			} else {
-				$("#message_text, #message_email").val("");
 				$.getJSON("https://www.2dio.com/app_contact.php", {app: app_info(), message:text, email:email}, function (data){
 					console.log(data);
 				});
 			}
-			open_modal("Sent!<i class='fa fa-envelope-o'></i>", "Thank you for your message!", false, false, "Close");
+			$("#message_text, #message_email").val("");
+			open_modal({title: "Sent!<i class='fa fa-envelope-o'></i>", content: "Thank you for your message!", button1: "Close"});
 		}
 	});
 	

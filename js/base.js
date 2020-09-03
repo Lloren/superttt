@@ -772,7 +772,7 @@ function admanager() {
 		console.log("ad manager startup");
 		if (inapp_has("removeads199"))
 			return;
-		if (!has_internet){
+		if (has_internet){
 			this.ad_fail();
 		}
 	};
@@ -984,6 +984,17 @@ function on_ready(){
 				ad_manager = new admanager();
 				ad_manager.init();
 			}
+			
+			/*inAppPurchase.getProducts(Object.keys(inapp_items)).then(function (products){
+				console.log("inAppPurchase.getProducts", products);
+				for (var i=0;i<products.length;i++){
+					var product = products[i];
+					var item = inapp_items[product.productId];
+					item.title = product.title;
+					item.description = product.description;
+					item.price = product.price;
+				}
+			}).catch(function (err){console.log(err)});*/
 			
 			var ver = device.version.split(".");
 			document.body.className = "v"+ver[0]+" version"+device.version.replace(/\./g, "_");
