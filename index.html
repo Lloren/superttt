@@ -17,10 +17,16 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="format-detection" content="telephone=no">
 
+	<!-- iOS -->
 	<link rel="apple-touch-icon" href="img/icon-iphone.png" />
+	<link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
 
+	<!-- Web -->
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 	<link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+	<!-- Android -->
+	<link rel="icon" sizes="192x192" href="android-icon-hd.png">
 
 		<!--<link rel="image_src" href="https://orbity.io/images/orbity-og-graphic.png" />-->
 	<meta property="og:title" content="Super Tic-Tac-Toe | Strategic Online Multiplayer Tic-Tac-Toe!" />
@@ -34,7 +40,7 @@
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
 	<script>
-		var dev = true;
+		var dev = false;
 		var ads = true;
 		var version = "0.0.1";
 		var app = "superttt";
@@ -127,7 +133,7 @@
 
 	<div class="hwrapper">
 		<div id="header">
-			<div class="logo"><small>Super <span style="color:#f96145;">#</span></small><br>Tic-Tac-Toe</div>
+			<div class="logo" style="height:45px;"><small>Super <span style="color:#f96145;">#</span></small><br>Tic-Tac-Toe</div>
 			<span id="menubutton" class="lmenu active" data-onpage="homepage"><span>Menu</span><i class="fa fa-bars"></i></span>
 			<span id="homebutton" class="lmenu open_page" data-onpage="online" data-page="homepage"><span>Offline</span><i class="fa fa-chevron-left" style="position:relative; top:1px;"></i></span>
 			<span id="ronlinebutton" class="rmenu open_page active" data-onpage="homepage" data-page="online" data-check="online_check"><span>Online</span><i class="fa fa-chevron-right" style="position:relative; top:1px;"></i></span>
@@ -168,7 +174,7 @@
 		</ul>
 		<ul>
 			<li><i class="fa desktop"></i> Dev</li>
-			<li class="toggle_delay_start" data-page="contact">Toggle delay start <span></span></li>
+			<li class="toggle_delay_start">Toggle delay start <span></span></li>
 		</ul>
 	</div>
 
@@ -442,8 +448,8 @@
 			<h2>Contact Us!</h2>
 			<p>Send us a message, we'd love to hear from you!</p>
 			<textarea id="message_text" class="touch_focus" placeholder="Contact us about bugs, requests, feedback, ideas, or just to say hi. :)" style="height: 150px;"></textarea>
-			<input type="text" id="message_email" class="touch_focus" placeholder="Your email (for replies)"></p>
-			<a class="button" style="width:100%;">Send</a>
+			<input type="text" id="message_email" class="touch_focus" placeholder="Your email (for replies)">
+			<a class="button" id="send_contact" style="width:100%;">Send</a>
 		</div>
 	</div>
 

@@ -55,7 +55,7 @@
 	<preference name="AutoHideSplashScreen" value="true" />
 
 	<preference name="SuppressesLongPressGesture" value="true" />
-	<preference name="Suppresses3DTouchGesture" value="false" />
+	<preference name="Suppresses3DTouchGesture" value="true" />
 
 	<gap:plugin name="cordova-plugin-whitelist" source="npm" />
 	<access origin="*" />
@@ -109,8 +109,8 @@
 	</gap:config-file>
 
 	<!-- Default Icon/Splash -->
-	<icon src="icon.png" />
-	<gap:splash src="splash.png" /> <!-- ??? *Breaks iOS build/preferences sometimes ??? -->
+	<!--<icon src="icon.png" />
+	<gap:splash src="splash.png" />--> <!-- ??? *Breaks iOS build/preferences sometimes ??? -->
 
 	<platform name="android">
 		<preference name="SplashMaintainAspectRatio" value="true"/>

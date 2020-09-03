@@ -9,7 +9,14 @@ var active_start = Date.now();
 var ad_manager = false;
 var thePlatform = "";
 var templates = {};
-var inapp_purcheses = [];
+var inapp_purcheses = JSON.parse(window.localStorage.getItem("inapp_purcheses") || "{}");
+var inapp_items = {removeads199:{id: "removeads199", alias: "Remove Ads", save: true, owned:function (re_run){
+			if (!re_run)// && !store.is_loading)
+				open_modal("Ads Removed!<i class='fa fa-thumbs-o-up'></i>", '<b>Thank you for supporting our small dev studio!</b>', false, false, "Ok", true);
+			ad_manager.hide();
+			$(".remove_paid").remove();
+			$(".has_paid").show();
+		}}};
 
 String.prototype.ucfirst = function() {
 	return this.charAt(0).toUpperCase() + this.slice(1);

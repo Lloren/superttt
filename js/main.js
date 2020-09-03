@@ -890,6 +890,99 @@ function startup(){
 			}
 		}, button2: true});
 	});
+	
+	click_event("#send_contact", function (){
+		var text = $("#message_text").val();
+		var email = $("#message_email").val();
+		if (text != ""){
+			if (email == ""){
+				if (confirm("Are you sure you want to send without a reply email address? We will be unable to respond to any questions or concerns.")){
+					$("#message_text, #message_email").val("");
+					$.getJSON("https://www.2dio.com/app_contact.php", {app: app_info(), message:text, email:email}, function (data){
+						console.log(data);
+					});
+				} else {
+					return;
+				}
+			} else {
+				$("#message_text, #message_email").val("");
+				$.getJSON("https://www.2dio.com/app_contact.php", {app: app_info(), message:text, email:email}, function (data){
+					console.log(data);
+				});
+			}
+			open_modal("Sent!<i class='fa fa-envelope-o'></i>", "Thank you for your message!", false, false, "Close");
+		}
+	});
+	
+	
+	click_event(".do_restore", function (e){
+		track("Menu", "restore ads");
+		open_modala("Connecting <i class='fa fa-spinner fa-spin'></i>");
+		close_menu();
+		inAppPurchase.restorePurchases().then(function (purchases) {
+			close_modala();
+			console.log(JSON.stringify(purchases));
+			for (var i=0;i<purchases.length;i++){
+				inapp_purchase(purchases[i].productId, purchases[i]);
+			}
+		}).catch(function (err) {
+			close_modala();
+			console.log(err);
+			open_modal("Restore Error", '<b>There appears to be an issue restoring your purchase.</b>');
+		});
+	});
+	click_event("#remove_ads", function (e){
+		track("Menu", "remove ads");
+		close_menu();
+		if (thePlatform == "ios"){
+			open_modal("Remove Ads!<i class='fa fa-thumbs-o-up'></i>", '<p>Remove advertising for '+inapp_items["removeads199"].price+'!</p><p>Thank you for supporting our small dev studio!<a class="fullwidth">Restore Purchase</a></p>', function (btn){
+				if (btn == "Purchase"){
+					open_modala("Connecting <i class='fa fa-spinner fa-spin'></i>");
+					inAppPurchase.buy("removeads199").then(function (data) {
+						close_modala();
+						console.log(data);
+						inapp_purchase("removeads199", data);
+					}).catch(function (err) {
+						close_modala();
+						console.log(err);
+						if (err.response == 7){
+							inapp_purchase("removeads199");
+						} else {
+							open_modal("Purchase Error", '<b>There appears to have been an issue with your purchase.</b>');
+						}
+					});
+				} else if (btn == "Restore Purchase"){
+					open_modala("Connecting <i class='fa fa-spinner fa-spin'></i>");
+					inAppPurchase.restorePurchases().then(function (purchases) {
+						close_modala();
+						console.log(JSON.stringify(purchases));
+						for (var i=0;i<purchases.length;i++){
+							inapp_purchase(purchases[i].productId, purchases[i]);
+						}
+					}).catch(function (err) {
+						close_modala();
+						console.log(err);
+						open_modal("Restore Error", '<b>There appears to be an issue restoring your purchase.</b>');
+					});
+				}
+			}, true, "Purchase", true, true);
+		} else {
+			open_modala("Connecting <i class='fa fa-spinner fa-spin'></i>");
+			inAppPurchase.buy("removeads199").then(function (data) {
+				close_modala();
+				console.log(data);
+				inapp_purchase("removeads199", data);
+			}).catch(function (err) {
+				close_modala();
+				console.log(err);
+				if (err.response == 7){
+					inapp_purchase("removeads199");
+				} else {
+					open_modal("Purchase Error", '<b>There appears to have been an issue with your purchase.</b>');
+				}
+			});
+		}
+	});
 
 	document.addEventListener("closebutton", function (){
 		//back_recent();
