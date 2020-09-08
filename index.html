@@ -90,6 +90,7 @@
 				<span>##username## <b>vs.</b> ##other_name##</span>
 				{{turn_out?<span>It's ##turn_out## Turn!</span>}}
 				<span class="gstarted">Started ##start_out## ago</span>
+				{{abandonable?<span class="button">Leave</span><small>Last move ##last_play_out## ago</small>}}
 			</div>
 			<div class="u2 open_game" data-game_id="##id##">
 				<span>##status_out##</span>
@@ -142,7 +143,7 @@
 			<span id="closebutton" class="lmenu" data-onpage="overlay"><span>Close</span><i class="fa fa-chevron-down"></i></span>
 			<span id="forfeitbutton" class="lmenu"><span>Forfeit</span><i class="fa fa-ban" style="position:relative; top:1px;"></i></span>
 			<span id="rquitbutton" class="rmenu open_page"><span>Close</span><i class="fa fa-times-circle"></i></span>
-			<span id="rleavebutton" class="rmenu open_page" data-onpage="game" data-page="homepage"><span>Leave</span><i class="fa fa-chevron-right" style="position:relative; top:1px;"></i></span>
+			<span id="rleavebutton" class="rmenu open_page" <!--data-onpage="game"--> data-page="homepage"><span>Leave</span><i class="fa fa-chevron-right" style="position:relative; top:1px;"></i></span>
 			<span id="rprofilebutton" class="rmenu open_page" data-onpage="online" data-page="profile"><span>Profile</span><i class="fa fa-user"></i></span>
 			<span id="notification_notice">0</span>
 		</div>
@@ -180,7 +181,7 @@
 	</div>
 
 	<div id="homepage" class="page show shown show_left" data-on_open="open_homepage">
-		<div class="bg_area"><ul class="circles"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>
+		<div class="bg_area"><ul class="squares"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>
 		<div class="bg_slider_container"><div class="bg_slider" style="background-color:#40D0C0;"></div></div>
 		<div class="content">
 			<div class="logo" style="font-size:2.5em; margin-bottom:15px;"><small style="font-size:5vmax !important; color:#FFF;">Super <span style="color:#f96145;">#</span></small><br>Tic-Tac-Toe</div>
@@ -195,7 +196,7 @@
 	</div>
 
 	<div id="online" data-on_open="load_online" data-unload="unload_online" class="page scrollable show_right">
-		<div class="bg_area"><ul class="circles"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>
+		<div class="bg_area"><ul class="squares"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>
 		<div class="bg_slider_container"><div class="bg_slider" style="background-color:#0BF; background-image:repeating-linear-gradient(135deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px)"></div></div>
 		<div class="content">
 			<div align="center">
@@ -233,7 +234,7 @@
 	</div>
 
 	<div id="game" class="play_ai page show_bottom" data-on_open="open_game" data-unload="close_game">
-		<div class="bg_area"><ul class="circles"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>
+		<div class="bg_area"><ul class="squares"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div>
 		<div class="bg_slider_container"><div class="bg_slider" style="background-color:#408ed0; background-image:repeating-linear-gradient(135deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px);"></div></div>
 		<div class="sbar">
 			<div id="pre_choices" style="display:none;">
@@ -379,7 +380,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="replay_game">
+		<div id="replay_game" style="display:none;">
 			<div id="replay_step_back"><i class="fa fa-angle-double-left"></i></div>
 			<div id="replay_play"><i class="fa fa-play-circle-o"></i> Replay</div>
 			<div id="replay_step_forward"><i class="fa fa-angle-double-right"></i></div>

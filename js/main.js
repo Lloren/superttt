@@ -11,7 +11,7 @@ function show_page(key, onload){
 	var page = $("#"+key);
 	if (onload && page.data("on_open")){
 		window[page.data("on_open")]();
-		console.log(page.data("on_open"));
+		//console.log(page.data("on_open"));
 	}
 	$(".lmenu, .rmenu").removeClass("active");
 	$("[data-onpage='"+key+"']").addClass("active");
@@ -57,13 +57,14 @@ function show_page(key, onload){
 function open_menu(){
 	$("#nav").addClass("open");
 	$("#nav-overlay").addClass("enabled");
-	//Audio.play_sound("button_slide_forward", "controls");
+	Audio.play_sound("button_slide_forward", "controls");
 }
 
-function close_menu(){
+function close_menu(triggered){
 	$("#nav").removeClass("open");
 	$("#nav-overlay").removeClass("enabled");
-	//Audio.play_sound("button_slide_back", "controls");
+	if (!triggered)
+		Audio.play_sound("button_slide_back", "controls");
 }
 
 var leaving_message = false;
@@ -125,6 +126,7 @@ function start_game(type, t2, load){
 			player_num = data.player_num;
 			other_num = data.ai_num;
 			user_turn = data.user_turn;
+			update_player_markers();
 			game = new Game(data.game);
 		}
 	}
@@ -169,6 +171,10 @@ function swap_players(){
 	t = player_num;
 	player_num = other_num;
 	other_num = t;
+	update_player_markers();
+}
+
+function update_player_markers(){
 	$("#game_p1_marker").removeClass(char_lookup[other_player_char]).addClass(char_lookup[player_char]);
 	$("#game_p2_marker").removeClass(char_lookup[player_char]).addClass(char_lookup[other_player_char]);
 	$("#game_player_turn").html(template("play_"+(player_num == 2?player_char:other_player_char)));
@@ -219,7 +225,7 @@ function open_game(){
 		other = "Them";
 		$("#game").addClass("playing_online");
 	}
-	$("#rleavebutton").data("page", leave_page);
+	//$("#rleavebutton").data("page", leave_page);
 	
 	$("#game .show").removeClass("show");
 	$("#game .board .fa").remove();
@@ -250,7 +256,7 @@ function open_game(){
 			if (data.player_num == 2){
 				swap_players();
 			}
-			console.log("your turn", user_turn);
+			//console.log("your turn", user_turn);
 			if (!push_enabled && !user_turn){
 				game_check_timeout = setTimeout(function () { check_status(); }, 5000);
 			}
@@ -277,6 +283,8 @@ function build_game(type){
 			}
 		}});
 	}
+	$(".prev_last_play").removeClass("prev_last_play");
+	$(".last_play").removeClass("last_play");
 
 	for (var i=1;i<10;i++){
 		if (game.boards[i].state){
@@ -315,7 +323,7 @@ function process_move(move, who){
 }
 
 function process_turn(data){
-	console.log(data);
+	//console.log(data);
 	var disp_char = player_num == data.type?player_char:other_player_char;
 	$(".prev_last_play").removeClass("prev_last_play");
 	$(".last_play").removeClass("last_play").addClass("prev_last_play");
@@ -345,13 +353,13 @@ function process_turn(data){
 			title = '<i class="fa '+char_lookup[player_char]+'" style="color:#ff3d1c;"></i> You Lost :(';
 		}
 		open_modal({content: '<div class="gameselectbuttons"><div>Options</div><a class="button">Play Again</a><a class="button">Review Board</a><a class="button">End Game</a></div>', title: title, button1: false, callback: function (button){
-			if (button == "Play Again"){//TODO, online needs more checks
-				if (game_type == "Online"){
+			if (button.html() == "Play Again"){
+				if (game_type == "Online"){//TODO, online needs more checks
 
 				} else {
 					start_game(game_type, game_ai?game_ai.level:false);
 				}
-			} else if (button == "End Game"){
+			} else if (button.html() == "End Game"){
 				show_page("homepage");
 			}
 		}});
@@ -707,7 +715,7 @@ function startup(){
 	
 	
 	$(document).on("mouseup touchend", function (e){//"not touched" event
-		if (!main_grid_touched && $(".board.highlight").length && !e.target.matches(".board.highlight")){
+		if (!main_grid_touched && $(".board.highlight").length && !e.target.matches(".board.highlight, .highlight .overlay")){
 			$(".board.highlight").removeClass("highlight");
 			Audio.play_sound("button_slide_back", "controls");
 		}
@@ -741,7 +749,7 @@ function startup(){
 
 	var main_grid_touched = false;
 	click_event(".main_grid", function (e){
-		console.log("main_grid");
+		//console.log("main_grid");
 		var board = $(this).children(".board");
 		if (user_turn && !board.hasClass("highlight") && !board.children(".overlay").hasClass("show")){
 			$(".board.highlight").removeClass("highlight");
@@ -839,7 +847,7 @@ function startup(){
 	
 	$("#play_friend_name").on("keyup", function (e){
 		Audio.play_sound("button_tap", "controls");
-		console.log(e);
+		//console.log(e);
 		if (e.which == 13){
 			$("#play_friend").trigger("click_event");
 		}
@@ -882,7 +890,7 @@ function startup(){
 	click_event(".change_name", function (e){
 		Audio.play_sound("button_tap", "controls");
 		open_modal({title: "Change UserID", content: '<small>When you change your UserID you will lose access to it and someone else can take it.</small><input type="text" id="changed_name" value="'+settings.get("username")+'" />', callback: function (button){
-			if (button == "Ok"){
+			if (button.html() == "Ok"){
 				make_call("/ajax/settings.php", {action: "username", username: $("#changed_name").val()}, function (data){
 					settings.set("username", data.name);
 					$("._username").html(data.name);
@@ -1000,7 +1008,8 @@ function startup(){
 
 	click_event(".open_page", function (e){
 		Audio.play_sound("button_slide_forward", "controls");
-		$("#nav-overlay").trigger("click_event");
+		//$("#nav-overlay").trigger("click_event");
+		close_menu(true);
 		if ($(e.currentTarget).data("check")){
 			if (!window[$(e.currentTarget).data("check")]())
 				return;

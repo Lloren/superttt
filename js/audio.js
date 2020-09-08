@@ -131,6 +131,7 @@ function audio(){
 	this.play_sound = function (name, channel, loop, rand) {
 		if (!this.play_audio)
 			return;
+		console.log("play_sound", name);
 		channel = channel || "main";
 		rand = rand || false;
 		var source = this.context.createBufferSource();

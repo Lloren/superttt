@@ -72,7 +72,7 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 }
 	#homepage.show.shown .bg_area, #online.show.shown .bg_area, #game.show.shown .bg_area {display:block;}
 
-.circles{
+.squares{
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -81,20 +81,20 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 	overflow: hidden;
 }
 
-.circles li{
+.squares li{
 	position: absolute;
 	display: block;
 	list-style: none;
 	width: 20px;
 	height: 20px;
 	background: rgba(255, 255, 255, 0.2);
-	animation: animate 25s linear infinite;
+	animation: squares_animate 25s linear infinite;
 	bottom: -150px;
 	animation-direction:alternate, reverse, alternate-reverse;
 }
-	#online.show.shown .circles li {animation-direction:alternate-reverse, reverse, alternate;}
+	#online.show.shown .squares li {animation-direction:alternate-reverse, reverse, alternate;}
 
-.circles li:nth-child(1){
+.squares li:nth-child(1){
 	left: 25%;
 	width: 80px;
 	height: 80px;
@@ -102,7 +102,7 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 }
 
 
-.circles li:nth-child(2){
+.squares li:nth-child(2){
 	left: 10%;
 	width: 20px;
 	height: 20px;
@@ -110,14 +110,14 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 	animation-duration: 12s;
 }
 
-.circles li:nth-child(3){
+.squares li:nth-child(3){
 	left: 70%;
 	width: 20px;
 	height: 20px;
 	animation-delay: 4s;
 }
 
-.circles li:nth-child(4){
+.squares li:nth-child(4){
 	left: 40%;
 	width: 60px;
 	height: 60px;
@@ -125,28 +125,28 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 	animation-duration: 18s;
 }
 
-.circles li:nth-child(5){
+.squares li:nth-child(5){
 	left: 65%;
 	width: 20px;
 	height: 20px;
 	animation-delay: 0s;
 }
 
-.circles li:nth-child(6){
+.squares li:nth-child(6){
 	left: 75%;
 	width: 110px;
 	height: 110px;
 	animation-delay: 3s;
 }
 
-.circles li:nth-child(7){
+.squares li:nth-child(7){
 	left: 35%;
 	width: 150px;
 	height: 150px;
 	animation-delay: 7s;
 }
 
-.circles li:nth-child(8){
+.squares li:nth-child(8){
 	left: 50%;
 	width: 25px;
 	height: 25px;
@@ -154,7 +154,7 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 	animation-duration: 45s;
 }
 
-.circles li:nth-child(9){
+.squares li:nth-child(9){
 	left: 20%;
 	width: 15px;
 	height: 15px;
@@ -162,7 +162,7 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 	animation-duration: 35s;
 }
 
-.circles li:nth-child(10){
+.squares li:nth-child(10){
 	left: 85%;
 	width: 150px;
 	height: 150px;
@@ -170,7 +170,7 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 	animation-duration: 11s;
 }
 
-@keyframes animate {
+@keyframes squares_animate {
 	0%{
 		transform: translate3d(0, 0, 0) rotate(0deg);
 		opacity: 1;
@@ -335,8 +335,10 @@ input, select {/*-webkit-appearance:none;*/ border-radius:0;}
 		.list_game div {vertical-align:middle; display:inline-block;}
 			.list_game span {display:block; font-size:10pt;}
 					.list_game span b.yourturn {color:gold; font-size:14pt;}
-				.list_game .gstarted, .list_game .gtime {font-size:0.65em;}
+				.list_game .gstarted, .list_game .gtime {font-size:0.5em;}
 		.u1 {width:49%;}
+			.u1 .button {padding:0; width:25vw; position:relative; left:50%; transform:translateX(-50%);}
+					.u1 small {font-size:0.65em;}
 		.u2 {width:47.5%; width:calc(50% - 6px);}
 			.u2 .button {position:relative; width:auto; padding:0 10px; max-width:125px; margin:0 auto;}
 				.u2 .button .fa-chevron-right {position:absolute; right:-15px; top:2px; opacity:0.5; color:#111;}

@@ -98,13 +98,11 @@ function register_touch_manager(){
 		last_touch.y = touch.screenY;
 		last_touch.time = Date.now();
 	};
+	
 	window.good_touch = function (e, trigger){
 		var touch = e.originalEvent.changedTouches[0];
 		
-		if (Math.abs(last_touch.x - touch.screenX) < 10 && Math.abs(last_touch.y - touch.screenY) < 10 && trigger == last_touch.trigger){
-			return true;
-		}
-		return false;
+		return Math.abs(last_touch.x - touch.screenX) < 10 && Math.abs(last_touch.y - touch.screenY) < 10 && trigger == last_touch.trigger;
 	};
 	
 	window.click_event = function(limiter, callback, target, no_prop){
@@ -132,6 +130,7 @@ function register_touch_manager(){
 				}
 			});
 		} else {
+			console.log("click_event", limiter);
 			$(limiter).on("touchstart", function (e){
 				set_touch(e, limiter);
 				if (no_prop){
