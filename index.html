@@ -90,7 +90,7 @@
 				<span>##username## <b>vs.</b> ##other_name##</span>
 				{{turn_out?<span>It's ##turn_out## Turn!</span>}}
 				<span class="gstarted">Started ##start_out## ago</span>
-				{{abandonable?<span class="button">Leave</span><small>Last move ##last_play_out## ago</small>}}
+				{{abandonable?<span class="button leave_game" data-game_id="##id##">Leave</span><small>Last move ##last_play_out## ago</small>}}
 			</div>
 			<div class="u2 open_game" data-game_id="##id##">
 				<span>##status_out##</span>
@@ -203,12 +203,13 @@
 				<div class="logo" style="font-size:2.5em;"><small style="font-size:5vmax !important; color:#FFF;">Super <span style="color:#f96145;">#</span></small><br>Tic-Tac-Toe</div>
 
 				<h3><i class="fa fa-globe"></i> Online Multiplayer</h3>
-				<a id="find_opponent" class="button">Find an opponent</a>
-				<a id="leave_queue" class="button" style="display: none;">Leave Queue</a><br />
+				<a id="leave_queue" class="button" style="display: none;">Leave Queue</a>
+				<div class="_can_new_game"><a id="find_opponent" class="button">Find an opponent</a><br />
 				<small style="display:none;">Currently <span id="player_num" style="font-size:1.4em;">0</span> players in queue</small><br />
 				- Or -<br /><br />
 				<input id="play_friend_name" type="text" placeholder="Friend's UserID" style="width:75vw;" /><br />
-				<a id="play_friend" class="button" style="border-top:none;">Play a friend</a><br />
+				<a id="play_friend" class="button" style="border-top:none;">Play a friend</a></div>
+				<div class="_cant_new_game">You have reached your maximum of 3 active games.</div><br />
 				<small>Your UserID is: <span class="_username" style="color:#FFF;"></span></small><br /><br />
 				<small style="display:none;">Looking for another player... <i class="fa fa-spinner fa-spin"></i></small>
 			</div>

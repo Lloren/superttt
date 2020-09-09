@@ -463,6 +463,13 @@ function load_online(calc){
 			$("#leave_queue").hide();
 			settings.delete("queue_id");
 		}
+		if (data.can_new_game){
+			$("._can_new_game").show();
+			$("._cant_new_game").hide();
+		} else {
+			$("._can_new_game").hide();
+			$("._cant_new_game").show();
+		}
 
 		var your_games_html = "No recent games";
 		if (data.your_games){
@@ -875,7 +882,7 @@ function startup(){
 			}
 		});
 	});
-
+	
 	click_event("#leave_queue", function (e){
 		Audio.play_sound("button_tap", "controls");
 		make_call("/ajax/queue_call.php", {action: "leave", queue_id:settings.get("queue_id")}, function (data){
@@ -886,6 +893,19 @@ function startup(){
 			}
 		});
 	});
+	
+	click_event(".leave_game", function (e){
+		Audio.play_sound("button_tap", "controls");
+		var scope = this;
+		open_modal({title: "Leave Game", content: '<small>You can abandon this game.</small>', callback: function (button){
+			if (button.html() == "Yes, Leave"){
+				make_call("/ajax/game_call.php", {action: "abandon", game_id: $(scope).data("game_id")}, function (data){
+					unload_online();
+					load_online();
+				});
+			}
+		}, button2: true, button1: "Yes, Leave"});
+	}, true);
 
 	click_event(".change_name", function (e){
 		Audio.play_sound("button_tap", "controls");
